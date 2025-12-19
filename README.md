@@ -46,16 +46,6 @@ Responsive layout for both desktop and mobile.
 你可以随意在此基础上增加模块、改风格、做成自己的模板
 Highly customizable — build your own style on top of it.
 
----
-
-### 📦 技术栈 / Tech Stack
-
-| 中文                     | English                             |
-| ---------------------- | ----------------------------------- |
-| HTML5                  | HTML5                               |
-| CSS3 动画                | CSS3 Animations                     |
-| JavaScript 交互 & 逻辑     | JavaScript for Logic & Interactions |
-| Canvas / Web Audio API | Canvas & Web Audio API (if used)    |
 
 ---
 
