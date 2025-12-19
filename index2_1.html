@@ -1,0 +1,3608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Me2U | Creative Space 🚀</title>
+    <!-- 网站图标 (自定义设计的眼睛 Logo) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22%23FFC312%22 stroke=%22%232d3436%22 stroke-width=%228%22/><circle cx=%2250%22 cy=%2250%22 r=%2220%22 fill=%22%232d3436%22/><circle cx=%2265%22 cy=%2235%22 r=%228%22 fill=%22white%22/></svg>">
+    <!-- 引入字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700;900&family=Quicksand:wght@600;700&family=VT323&family=Bangers&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==================== 0. 全局配置 ==================== */
+        :root {
+            /* ☀️ Day Theme (Vibrant Pop Art) */
+            --c-yellow: #FFC312; /* Sunflower */
+            --c-red: #EE5A24;    /* Pomegranate */
+            --c-blue: #12CBC4;   /* Blue Martina */
+            --c-green: #A3CB38;  /* Android Green */
+            --c-purple: #9980FA; /* Forgotten Purple */
+            --c-dark: #2d3436;
+            --c-bg-pc: #f7f1e3;  /* Tinted Cream */
+            --c-text: #2d3436;
+            --c-card-bg: #ffffff;
+            --c-shadow: rgba(0,0,0,0.15);
+            --c-pupil: #2d3436; /* 👁️ Pupil Color (Day) */
+        }
+
+        [data-theme="dark"] {
+            /* 🌙 Night Theme (Cyberpunk Neon) */
+            --c-yellow: #F79F1F;
+            --c-red: #EA2027;
+            --c-blue: #0652DD; /* Deep Blue */
+            --c-green: #009432;
+            --c-purple: #D980FA;
+            
+            /* Override for Neon Glows */
+            --c-yellow: #FFEA00;
+            --c-red: #FF0055;
+            --c-blue: #00F3FF;
+            --c-green: #00FF9F;
+            --c-purple: #BC13FE;
+
+            --c-dark: #ffffff; /* In dark mode, borders become white */
+            --c-bg-pc: #131419; /* Deep Dark Blue-Black */
+            --c-text: #ffffff;
+            --c-card-bg: #1F2229;
+            --c-shadow: rgba(0,0,0,0.5);
+            --c-pupil: #000000; /* 👁️ Pupil Color (Night) - Must be black */
+        }
+
+        /* 🌙 Night Mode Neon Glows */
+        [data-theme="dark"] .card:hover {
+            box-shadow: 0 0 15px var(--c-blue), 0 0 30px var(--c-purple) !important;
+            border-color: #fff;
+        }
+        [data-theme="dark"] .about-box:hover {
+            box-shadow: 5px 5px 0 #fff, 0 0 20px var(--c-red);
+        }
+        [data-theme="dark"] .social-btn:hover {
+            box-shadow: 0 0 15px var(--c-green);
+            border-color: #fff;
+        }
+        [data-theme="dark"] .widget-clock, 
+        [data-theme="dark"] .widget-music, 
+        [data-theme="dark"] .widget-theme {
+            box-shadow: 4px 4px 0 #fff, 0 0 10px var(--c-yellow);
+        }
+        /* 🌙 Night Mode Eye Contrast */
+        [data-theme="dark"] .eye { background: #f7f7f7; border-color: #f7f7f7; box-shadow: 0 0 0 3px rgba(255,255,255,0.25); }
+        [data-theme="dark"] .pupil { background: #000 !important; border-color: #000; box-shadow: 0 0 0 3px #fff inset, 0 0 10px rgba(0,0,0,0.45); }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+        
+        /* PC端隐藏默认鼠标 */
+        @media (min-width: 769px) { 
+            body, a, button { cursor: none !important; } 
+            
+            /* 🎨 [新增] 自定义滚动条 */
+            ::-webkit-scrollbar { width: 14px; }
+            ::-webkit-scrollbar-track { background: var(--c-bg-pc); border-left: 2px solid var(--c-dark); }
+            ::-webkit-scrollbar-thumb { 
+                background: repeating-linear-gradient(
+                    45deg,
+                    var(--c-yellow),
+                    var(--c-yellow) 6px,
+                    var(--c-red) 6px,
+                    var(--c-red) 12px
+                );
+                border: 2px solid var(--c-dark); 
+                border-radius: 10px;
+            }
+            ::-webkit-scrollbar-thumb:hover { 
+                background: repeating-linear-gradient(
+                    45deg,
+                    var(--c-blue),
+                    var(--c-blue) 6px,
+                    var(--c-green) 6px,
+                    var(--c-green) 12px
+                );
+            }
+        }
+        
+        /* 进场动画 */
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.5); }
+            60% { opacity: 1; transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
+
+        /* 🛸 UFO Animation */
+        @keyframes flyUFO {
+            0% { transform: translate(-100vw, 10vh) rotate(10deg) scale(0.5); }
+            25% { transform: translate(20vw, 30vh) rotate(-5deg) scale(0.8); }
+            50% { transform: translate(50vw, 10vh) rotate(10deg) scale(0.6); }
+            75% { transform: translate(80vw, 40vh) rotate(-10deg) scale(0.9); }
+            100% { transform: translate(120vw, 20vh) rotate(5deg) scale(0.5); }
+        }
+        .ufo-container {
+            position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1;
+            animation: flyUFO 20s linear infinite;
+            opacity: 0.8;
+        }
+        .ufo-icon {
+            font-size: 4rem; color: var(--c-purple);
+            filter: drop-shadow(0 0 10px var(--c-blue));
+        }
+
+        /* 🚀 Rocket Hover Animation */
+        .rocket-icon { display: inline-block; transition: transform 0.3s; }
+        .about-box:hover .rocket-icon {
+            animation: rocketLaunch 1s ease-in-out infinite alternate;
+            color: var(--c-red);
+        }
+        @keyframes rocketLaunch {
+            0% { transform: translate(0, 0) rotate(0); }
+            100% { transform: translate(5px, -5px) rotate(45deg); }
+        }
+
+        /* 📝 Text Animation */
+        .word-span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeInUp 0.5s forwards;
+        }
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ==================== 💻 电脑端 (极繁波普 + 动画增强) ==================== */
+        @media (min-width: 769px) {
+            body {
+                font-family: 'Fredoka', sans-serif;
+                background-color: var(--c-bg-pc);
+                color: var(--c-text);
+                /* 动态网格背景 + 柔和渐变 */
+                background-image: 
+                    radial-gradient(var(--c-dark) 1.5px, transparent 1.5px),
+                    radial-gradient(rgba(128, 128, 128, 0.1) 1px, transparent 1px),
+                    linear-gradient(135deg, rgba(255, 217, 61, 0.1) 0%, rgba(255, 107, 107, 0.1) 50%, rgba(77, 150, 255, 0.1) 100%);
+                background-size: 40px 40px, 20px 20px, 100% 100%;
+                background-attachment: fixed;
+                min-height: 100vh;
+                display: flex; flex-direction: column; justify-content: center; align-items: center;
+                overflow: hidden; 
+                padding-top: 40px; 
+                padding-bottom: 120px;
+                position: relative;
+                transition: background-color 0.5s, color 0.5s;
+            }
+
+            /* 🪐 Logo 卫星环绕动画 */
+            .orbit-sat {
+                position: absolute;
+                top: -10px; right: -40px;
+                width: 160px; height: 160px;
+                pointer-events: none;
+                animation: orbitRing 14s linear infinite;
+                opacity: 0.8;
+                z-index: 2;
+            }
+            .orbit-sat .satellite {
+                position: absolute;
+                width: 22px; height: 22px;
+                border-radius: 50%;
+                background: var(--c-yellow);
+                border: 3px solid var(--c-dark);
+                box-shadow: 0 0 0 6px rgba(0,0,0,0.08);
+                transform-origin: -60px 80px;
+                animation: orbitDot 14s linear infinite;
+            }
+            @keyframes orbitRing {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            @keyframes orbitDot {
+                0% { transform: rotate(0deg) translate(80px, 0); }
+                50% { transform: rotate(180deg) translate(80px, 0) scale(1.1); }
+                100% { transform: rotate(360deg) translate(80px, 0); }
+            }
+
+            /* 🆕 [新增] 鼠标拖尾效果 */
+            .trail-dot {
+                position: fixed;
+                width: 10px; height: 10px;
+                border-radius: 50%;
+                background: var(--c-dark);
+                pointer-events: none;
+                z-index: 9998;
+                animation: fadeOutTrail 0.5s forwards;
+            }
+            @keyframes fadeOutTrail {
+                to { opacity: 0; transform: scale(0); }
+            }
+
+            /* ☄️ Comet Shooting Animation */
+            .comet {
+                position: fixed;
+                top: 15%; left: -20%;
+                width: 160px; height: 4px;
+                background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 60%, rgba(255,217,61,0.9) 100%);
+                border-radius: 50px;
+                filter: drop-shadow(0 0 12px rgba(255,217,61,0.7));
+                animation: shoot 8s cubic-bezier(0.6, 0.01, 0.4, 1) infinite;
+                opacity: 0.75;
+                z-index: 2;
+            }
+            @keyframes shoot {
+                0% { transform: translate(-10vw, 0) rotate(12deg); opacity: 0; }
+                8% { opacity: 1; }
+                40% { transform: translate(120vw, 40vh) rotate(12deg); opacity: 1; }
+                60% { opacity: 0; }
+                100% { transform: translate(120vw, 40vh) rotate(12deg); opacity: 0; }
+            }
+
+            /* 🆕 [新增] 背景噪点纹理 */
+            .noise-overlay {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                pointer-events: none; z-index: 9000; opacity: 0.05;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            }
+
+            /* 🆕 布局容器 (Split Layout) */
+            .main-container {
+                display: flex;
+                width: 100%;
+                max-width: 1200px;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0 50px;
+                z-index: 5;
+            }
+            .left-col {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 30px;
+            }
+            .right-col {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                /* 装饰性背景 Blob */
+            }
+            .right-col::before {
+                content: '';
+                position: absolute;
+                top: 50%; left: 50%;
+                width: 120%; height: 120%;
+                background: radial-gradient(circle, rgba(77, 150, 255, 0.08) 0%, rgba(255, 107, 107, 0.05) 50%, transparent 70%);
+                transform: translate(-50%, -50%);
+                z-index: -1;
+                border-radius: 50%;
+                animation: pulseBlob 8s ease-in-out infinite alternate;
+                pointer-events: none;
+            }
+            @keyframes pulseBlob {
+                0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.5; }
+                100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+            }
+
+            .mobile-only { display: none !important; }
+
+            /* 🚫 加载遮罩 */
+            .loader-curtain {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: var(--c-bg-pc); z-index: 20000;
+                display: flex; justify-content: center; align-items: center;
+                animation: fadeOut 0.8s 0.5s forwards;
+                pointer-events: none;
+            }
+
+            /* 🖱️ 鼠标光标 */
+            .cursor-dot {
+                width: 12px; height: 12px; background: var(--c-dark); border-radius: 50%;
+                position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+                pointer-events: none; z-index: 10000;
+                transition: background 0.3s;
+            }
+            .cursor-outline {
+                width: 40px; height: 40px; border: 2px solid var(--c-dark); border-radius: 50%;
+                position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+                pointer-events: none; z-index: 9999; transition: width 0.15s, height 0.15s, background-color 0.15s, border-color 0.3s;
+            }
+            body.hovering .cursor-outline { 
+                width: 70px; height: 70px; 
+                background: rgba(255, 217, 61, 0.6); 
+                border-color: transparent; 
+                mix-blend-mode: difference; 
+            }
+
+            /* 🎨 [升级] 漂浮背景几何体 (美化 + 动画) */
+            .floating-shape {
+                position: absolute; pointer-events: none; z-index: 0;
+                border: 3px solid var(--c-dark); box-shadow: 4px 4px 0 var(--c-shadow);
+                animation: floatShape 10s infinite ease-in-out;
+                transition: border-color 0.5s;
+            }
+            .fs-1 { top: 15%; left: 8%; width: 50px; height: 50px; background: var(--c-blue); border-radius: 50%; animation-delay: 0s; }
+            .fs-2 { top: 18%; right: 10%; width: 0; height: 0; border-left: 25px solid transparent; border-right: 25px solid transparent; border-bottom: 50px solid var(--c-red); background: none; border: none; filter: drop-shadow(4px 4px 0 var(--c-shadow)); animation: floatShape 12s infinite reverse; }
+            /* 移动绿色方块，避免遮挡左侧内容 */
+            .fs-3 { bottom: 10%; left: 5%; width: 60px; height: 60px; background: var(--c-green); transform: rotate(15deg); animation-delay: -2s; border-radius: 12px; z-index: -1; opacity: 0.6; }
+            .fs-4 { bottom: 35%; right: 18%; font-size: 5rem; border: none; box-shadow: none; color: var(--c-purple); animation: spinSlow 20s linear infinite; opacity: 0.8; }
+            /* 新增几何体 */
+            .fs-5 { top: 40%; left: 2%; font-size: 3rem; color: var(--c-yellow); border: none; box-shadow: none; animation: floatShape 8s infinite ease-in-out; transform: rotate(-20deg); z-index: -1; }
+            .fs-6 { bottom: 10%; right: 5%; width: 40px; height: 40px; background: var(--c-dark); border-radius: 50%; border: 2px solid white; animation: floatShape 15s infinite; }
+
+            @keyframes floatShape {
+                0%, 100% { transform: translate(0, 0) rotate(0deg); }
+                50% { transform: translate(20px, -30px) rotate(10deg); }
+            }
+            @keyframes spinSlow { to { transform: rotate(360deg); } }
+
+            /* 🧱 背景呼吸文字 */
+            .bg-big-text {
+                position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-10deg);
+                font-family: 'Bangers', cursive;
+                font-size: 25vw; 
+                color: var(--c-text); opacity: 0.04;
+                white-space: nowrap; pointer-events: none; z-index: 0;
+                user-select: none;
+                animation: breatheText 8s ease-in-out infinite;
+                transition: color 0.5s;
+            }
+            @keyframes breatheText {
+                0%, 100% { transform: translate(-50%, -50%) rotate(-10deg) scale(1); }
+                50% { transform: translate(-50%, -50%) rotate(-8deg) scale(1.05); }
+            }
+
+            /* 装饰元素 */
+            .side-deco {
+                position: absolute; top: 0; height: 100%; width: 60px;
+                display: flex; flex-direction: column; align-items: center; justify-content: space-around;
+                z-index: 1; opacity: 0.6;
+            }
+            .side-deco.left { left: 40px; border-right: 4px dashed rgba(128, 128, 128, 0.3); }
+            .side-deco.right { right: 40px; border-left: 4px dashed rgba(128, 128, 128, 0.3); }
+            .side-icon { 
+                font-size: 1.8rem; color: var(--c-dark); 
+                transition: 0.3s; cursor: default;
+            }
+            .side-icon:hover { transform: scale(1.5) rotate(20deg); color: var(--c-red); }
+
+            /* 角落贴纸 */
+            .corner-sticker {
+                position: absolute; z-index: 2; font-weight: 900; color: var(--c-text);
+                background: var(--c-card-bg); border: 3px solid var(--c-dark); padding: 8px 20px;
+                transform: rotate(-15deg); box-shadow: 6px 6px 0 var(--c-shadow);
+                transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.5s, border-color 0.5s;
+                font-family: 'Bangers', cursive; font-size: 1.2rem; letter-spacing: 1px;
+            }
+            .corner-sticker:hover { transform: rotate(0deg) scale(1.1); z-index: 100; }
+            .cs-1 { top: 80px; left: 12%; background: var(--c-yellow); color: #2d3436; }
+            .cs-2 { bottom: 120px; right: 12%; background: var(--c-blue); color: white; transform: rotate(10deg); }
+
+            /* 组件: 时钟与音乐 */
+            .widget-clock, .widget-music, .widget-theme {
+                position: absolute; top: 30px; z-index: 10;
+                background: var(--c-dark); color: var(--c-bg-pc);
+                border: 3px solid var(--c-bg-pc); box-shadow: 6px 6px 0 var(--c-shadow);
+                transition: transform 0.2s, background 0.5s, border-color 0.5s;
+            }
+            .widget-clock { 
+                left: 120px; font-family: 'VT323', monospace; font-size: 2rem; 
+                padding: 5px 20px; border-radius: 12px; transform: rotate(-3deg); 
+            }
+            .widget-music { 
+                right: 120px; background: var(--c-card-bg); color: var(--c-dark); border: 3px solid var(--c-dark); 
+                padding: 10px 25px; border-radius: 50px; transform: rotate(3deg); 
+                display: flex; align-items: center; gap: 10px; box-shadow: 6px 6px 0 var(--c-dark); 
+            }
+            /* 🆕 主题切换按钮 */
+            .widget-theme {
+                right: 320px; width: 50px; height: 50px; border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                font-size: 1.5rem; cursor: pointer; transform: rotate(-5deg);
+                background: var(--c-yellow); color: #2d3436; border: 3px solid var(--c-dark);
+                box-shadow: 4px 4px 0 var(--c-dark);
+            }
+
+            .widget-clock:hover, .widget-music:hover, .widget-theme:hover { transform: scale(1.1) rotate(0); }
+            .bars .bar { width: 4px; height: 15px; background: var(--c-dark); display: inline-block; animation: dance 0.5s infinite alternate; border-radius: 2px; }
+            .bar:nth-child(2) { animation-delay: 0.1s; height: 20px; } .bar:nth-child(3) { animation-delay: 0.2s; }
+            @keyframes dance { from { height: 5px; } to { height: 20px; } }
+
+            /* � [新增] 顶部滚动进度条 */
+            .scroll-progress {
+                position: fixed; top: 0; left: 0; height: 5px; background: linear-gradient(to right, var(--c-yellow), var(--c-red), var(--c-blue), var(--c-green));
+                z-index: 99999; width: 0%; transition: width 0.1s;
+            }
+
+            /* 🆕 [新增] Logo 字母动画样式 */
+            .logo-text {
+                font-family: 'Fredoka', sans-serif;
+                font-size: 9rem;
+                line-height: 0.9;
+                margin: 0;
+                position: relative;
+                z-index: 5;
+                display: flex;
+                justify-content: center;
+                cursor: default;
+                filter: drop-shadow(8px 8px 0 var(--c-shadow));
+                perspective: 500px; /* 增加透视感 */
+            }
+            
+            /* 移除旧的容器 Glitch 效果，改为更细腻的字母互动 */
+            .logo-wrapper:hover .logo-text {
+                filter: drop-shadow(12px 12px 0 rgba(0,0,0,0.15));
+            }
+
+            .letter {
+                display: inline-block;
+                color: var(--c-card-bg);
+                -webkit-text-stroke: 9px var(--c-dark);
+                paint-order: stroke fill;
+                position: relative;
+                transform-origin: center bottom;
+                transition: color 0.3s;
+                /* 🌊 待机动画: 波浪浮动 */
+                animation: floatWave 4s ease-in-out infinite;
+            }
+            
+            @keyframes floatWave {
+                0%, 100% { transform: translateY(0) rotate(0deg); }
+                25% { transform: translateY(-12px) rotate(-3deg); }
+                50% { transform: translateY(0) rotate(0deg); }
+                75% { transform: translateY(6px) rotate(3deg); }
+            }
+
+            .letter:nth-child(1) { animation-delay: 0s; }
+            .letter:nth-child(2) { animation-delay: 0.15s; }
+            .letter:nth-child(3) { animation-delay: 0.3s; }
+            .letter:nth-child(4) { animation-delay: 0.45s; }
+
+            /* ✨ 悬停效果: 果冻弹跳 + 多彩 */
+            .logo-wrapper:hover .letter {
+                animation: jellyBounce 0.8s infinite;
+                -webkit-text-stroke: 9px var(--c-dark);
+            }
+            .logo-wrapper:hover .letter:nth-child(1) { color: var(--c-red); animation-delay: 0s; }
+            .logo-wrapper:hover .letter:nth-child(2) { color: var(--c-blue); animation-delay: 0.1s; }
+            .logo-wrapper:hover .letter:nth-child(3) { color: var(--c-green); animation-delay: 0.2s; }
+            .logo-wrapper:hover .letter:nth-child(4) { color: var(--c-purple); animation-delay: 0.3s; }
+
+            @keyframes jellyBounce {
+                0%, 100% { transform: scale(1, 1) translateY(0); }
+                25% { transform: scale(0.9, 1.1) translateY(-20px); }
+                50% { transform: scale(1.1, 0.9) translateY(0); }
+                75% { transform: scale(0.95, 1.05) translateY(-5px); }
+            }
+            .logo-wrapper:hover .letter:nth-child(1) { animation-delay: 0.0s; color: var(--c-red); }
+            .logo-wrapper:hover .letter:nth-child(2) { animation-delay: 0.1s; color: var(--c-blue); }
+            .logo-wrapper:hover .letter:nth-child(3) { animation-delay: 0.2s; color: var(--c-green); }
+            .logo-wrapper:hover .letter:nth-child(4) { animation-delay: 0.3s; color: var(--c-purple); }
+
+            @keyframes rubberBand {
+                0% { transform: scale3d(1, 1, 1); }
+                30% { transform: scale3d(1.25, 0.75, 1); }
+                40% { transform: scale3d(0.75, 1.25, 1); }
+                50% { transform: scale3d(1.15, 0.85, 1); }
+                65% { transform: scale3d(0.95, 1.05, 1); }
+                75% { transform: scale3d(1.05, 0.95, 1); }
+                100% { transform: scale3d(1, 1, 1); }
+            }
+
+            /* Splash Background */
+            .logo-splash {
+                position: absolute;
+                top: 50%; left: 50%;
+                transform: translate(-50%, -50%) scale(0);
+                width: 300px; height: 300px;
+                background: radial-gradient(circle, var(--c-yellow) 0%, transparent 70%);
+                z-index: 0;
+                opacity: 0;
+                transition: all 0.5s;
+                border-radius: 50%;
+                filter: blur(20px);
+            }
+            .logo-wrapper:hover .logo-splash {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.4;
+            }
+
+            /* 🍔 Logo区 */
+            .logo-container { position: relative; margin-bottom: 30px; text-align: left; z-index: 10; }
+            .logo-wrapper { cursor: pointer; transition: transform 0.1s; display: inline-block; position: relative; }
+            .logo-wrapper:active { transform: scale(0.95); }
+            /* .logo-wrapper:hover h1 { color: var(--c-yellow); -webkit-text-stroke: 7px var(--c-dark); } */ /* Removed old hover */
+            
+            .mascot-eyes { display: flex; gap: 12px; justify-content: center; margin-bottom: -25px; position: relative; z-index: 3; }
+            .eye { 
+                width: 70px; height: 70px; 
+                background: radial-gradient(circle at 30% 30%, #ffffff 0%, #f0f0f0 100%);
+                border: 6px solid #0f0f0f; 
+                border-radius: 50%; 
+                position: relative; 
+                overflow: hidden; 
+                box-shadow: 0 10px 20px rgba(0,0,0,0.15), inset 0 0 15px rgba(0,0,0,0.05);
+                transition: transform 0.1s, box-shadow 0.3s;
+            }
+            [data-theme="dark"] .eye { 
+                background: radial-gradient(circle at 30% 30%, #f6f6f6 0%, #e0e0e0 100%);
+                border-color: #0f0f0f; 
+                box-shadow: 0 0 0 4px rgba(255,255,255,0.25), 0 6px 0 rgba(0,0,0,0.55); 
+            }
+            /* 瞳孔 */
+            .pupil { 
+                width: 30px; height: 30px; 
+                background: var(--c-pupil); 
+                border: 3px solid #000;
+                box-shadow: 0 0 0 3px rgba(255,255,255,0.3) inset, 0 6px 12px rgba(0,0,0,0.45);
+                border-radius: 50%; 
+                position: absolute; 
+                top: 50%; left: 50%; 
+                transform: translate(-50%, -50%); 
+                transition: width 0.2s, height 0.2s, transform 0.2s; /* 聚焦动画 */
+                overflow: hidden; /* 确保高光不溢出 */
+            }
+            [data-theme="dark"] .pupil { background: #000 !important; border-color: #000; }
+            .pupil::after {
+                content: '';
+                position: absolute;
+                inset: -6px;
+                border-radius: 50%;
+                background:
+                    radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9) 0 22%, transparent 45%),
+                    radial-gradient(circle at 60% 70%, rgba(0,0,0,0.25) 0 55%, transparent 70%);
+                opacity: 0.7;
+                animation: irisSpin 6s linear infinite, pupilPulse 2.8s ease-in-out infinite;
+            }
+            @keyframes irisSpin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+            @keyframes pupilPulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.07); }
+            }
+            /* 高光 (现在相对于瞳孔定位) */
+            .eye-shine {
+                position: absolute;
+                top: 6px; left: 6px;
+                width: 10px; height: 10px;
+                background: white;
+                border-radius: 50%;
+                z-index: 2;
+                opacity: 0.95;
+                filter: drop-shadow(0 0 2px rgba(255,255,255,0.8));
+                /* 呼吸动画 - 仅控制透明度，避免与 JS transform 冲突 */
+                animation: shinePulse 3s infinite alternate;
+                transition: transform 0.1s ease-out; /* 平滑移动 */
+            }
+            @keyframes shinePulse {
+                0% { opacity: 0.6; }
+                100% { opacity: 1; }
+            }
+            /* 眼睑 (眨眼动画) */
+            .eyelid {
+                position: absolute;
+                top: 0; left: 0;
+                width: 100%; height: 0%;
+                background: #000;
+                z-index: 5;
+                animation: blinkAnim 4s infinite;
+            }
+            [data-theme="dark"] .eyelid { background: #000; }
+            @keyframes blinkAnim {
+                0%, 48%, 52%, 100% { height: 0%; }
+                50% { height: 100%; }
+            }
+            /* 聚焦效果 */
+            .mascot-eyes:hover .pupil { width: 20px; height: 20px; } /* 聚焦变小 */
+            .mascot-eyes:hover .eye { transform: scale(1.05); }
+
+            /* h1 {
+                font-size: 8rem; color: var(--c-card-bg);
+                -webkit-text-stroke: 8px var(--c-dark); paint-order: stroke fill;
+                text-shadow: 8px 8px 0 var(--c-shadow); letter-spacing: -3px; margin: 0; position: relative; z-index: 2;
+                line-height: 1; transition: color 0.3s, -webkit-text-stroke 0.5s;
+                font-family: 'Fredoka', sans-serif;
+            } */ /* Removed old h1 style */
+            .logo-sparkle { position: absolute; font-size: 2rem; color: var(--c-yellow); top: 0; right: -20px; animation: spinSlow 3s infinite linear; }
+
+            /* ✨ 打字机标语 */
+            .typewriter {
+                font-family: 'VT323', monospace;
+                font-size: 2rem;
+                color: var(--c-dark);
+                background: var(--c-card-bg);
+                padding: 4px 18px;
+                border: 3px solid var(--c-dark);
+                display: inline-block;
+                transform: rotate(-2deg);
+                margin-top: 15px;
+                box-shadow: 6px 6px 0 var(--c-dark);
+                border-radius: 8px;
+                transition: background 0.5s, border-color 0.5s, color 0.5s;
+            }
+            .cursor {
+                display: inline-block; width: 10px; height: 2rem; background: var(--c-dark);
+                vertical-align: sub; animation: blink 1s infinite;
+            }
+            @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+            /* 🃏 [升级] 导航卡片区 */
+            .nav-deck { display: flex; flex-direction: column; gap: 30px; z-index: 5; margin-bottom: 40px; perspective: 1000px; }
+            
+            .card {
+                width: 300px; height: 120px;
+                border: 4px solid var(--c-dark); border-radius: 20px;
+                text-decoration: none; color: var(--c-dark);
+                display: flex; flex-direction: row; align-items: center; justify-content: flex-start;
+                padding: 0 30px; gap: 20px;
+                box-shadow: 10px 10px 0px var(--c-dark); 
+                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                position: relative; overflow: hidden; background: var(--c-card-bg);
+                animation: popIn 0.6s backwards;
+                transform-style: preserve-3d;
+            }
+
+            /* Shine Effect */
+            .card::after {
+                content: ''; position: absolute; top: 0; left: -150%;
+                width: 100%; height: 100%;
+                background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+                transform: skewX(-25deg); pointer-events: none; z-index: 10;
+                transition: none;
+            }
+            .card:hover::after {
+                left: 150%; transition: left 0.6s ease-in-out;
+            }
+
+            /* 卡片内部纹理背景 */
+            .card::before {
+                content: ''; position: absolute; top:0; left:0; width:100%; height:100%;
+                background-image: radial-gradient(var(--c-dark) 1px, transparent 1px);
+                background-size: 10px 10px; opacity: 0.1; pointer-events: none; z-index: 0;
+            }
+            
+            .card:nth-child(1) { 
+                transform: rotate(-2deg) translateX(-20px); animation-delay: 0.1s; 
+                background: linear-gradient(to right, rgba(255, 195, 18, 0.1), var(--c-card-bg) 40%);
+                border-left: 15px solid var(--c-yellow); 
+            }
+            .card:nth-child(2) { 
+                transform: rotate(1deg) translateX(10px); animation-delay: 0.2s; 
+                background: linear-gradient(to right, rgba(238, 90, 36, 0.1), var(--c-card-bg) 40%);
+                border-left: 15px solid var(--c-red); 
+            }
+            .card:nth-child(3) { 
+                transform: rotate(-1deg) translateX(-10px); animation-delay: 0.3s; 
+                background: linear-gradient(to right, rgba(18, 203, 196, 0.1), var(--c-card-bg) 40%);
+                border-left: 15px solid var(--c-blue); 
+            }
+
+            /* [新增] 胶带效果 */
+            .tape {
+                position: absolute; top: -12px; right: 40px; width: 55px; height: 22px;
+                background: rgba(255,255,255,0.4); 
+                border-left: 2px dotted rgba(0,0,0,0.1); border-right: 2px dotted rgba(0,0,0,0.1);
+                transform: rotate(-5deg); backdrop-filter: blur(3px); z-index: 15;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            }
+
+            /* 徽标 */
+            .badge {
+                position: absolute; top: 10px; right: 10px;
+                background: var(--c-dark); color: var(--c-bg-pc);
+                padding: 4px 12px; border-radius: 50px; font-weight: 800; border: 2px solid var(--c-bg-pc);
+                transform: rotate(15deg); box-shadow: 3px 3px 0 rgba(0,0,0,0.2); z-index: 10;
+                font-size: 0.75rem; letter-spacing: 1px;
+            }
+
+            .card-icon { 
+                font-size: 3rem; color: var(--c-dark); 
+                transition: transform 0.4s; position: relative; z-index: 1;
+                filter: drop-shadow(2px 2px 0 rgba(255,255,255,0.5));
+                margin-bottom: 0;
+            }
+            .card-info { display: flex; flex-direction: column; z-index: 1; }
+            .card-title-pc { 
+                font-size: 2rem; font-weight: 900; color: var(--c-dark); 
+                text-transform: uppercase; margin-bottom: 0;
+                transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); 
+                letter-spacing: 1px; position: relative;
+                text-shadow: 2px 2px 0 rgba(255,255,255,0.5);
+                display: inline-block;
+            }
+            
+            /* 悬停时标题跳动变色 */
+            .card:hover .card-title-pc {
+                transform: translateX(5px) scale(1.1);
+                text-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+            }
+            .card:nth-child(1):hover .card-title-pc { color: var(--c-yellow); -webkit-text-stroke: 1.5px var(--c-dark); }
+            .card:nth-child(2):hover .card-title-pc { color: var(--c-red); -webkit-text-stroke: 1.5px var(--c-dark); }
+            .card:nth-child(3):hover .card-title-pc { color: var(--c-blue); -webkit-text-stroke: 1.5px var(--c-dark); }
+
+            /* ✨ 描述文字动画 */
+            .card-desc-pc {
+                font-size: 0.9rem; font-weight: 700; color: var(--c-dark); opacity: 0.6;
+                background: transparent; padding: 0; border: none;
+                transition: all 0.4s ease;
+                transform: translateX(0);
+                display: inline-block;
+            }
+            .card:hover .card-desc-pc {
+                opacity: 1;
+                transform: translateX(8px);
+                letter-spacing: 2px;
+                color: var(--c-dark);
+                font-weight: 900;
+            }
+
+            /* 悬停效果美化 */
+            .card:hover { 
+                transform: translateX(0) scale(1.05) rotate(0deg) !important; 
+                box-shadow: 15px 15px 0 var(--c-dark); z-index: 20; 
+                border-color: var(--c-dark);
+            }
+            .card:hover .card-icon { transform: scale(1.2) rotate(-10deg); }
+            
+            /* 社交底座 */
+            .social-dock {
+                background: var(--c-card-bg); border: 4px solid var(--c-dark); 
+                padding: 15px 40px; border-radius: 80px;
+                display: flex; gap: 20px; box-shadow: 10px 10px 0 var(--c-dark); z-index: 5;
+                animation: popIn 0.6s 0.5s backwards;
+                position: relative;
+                margin-top: 20px;
+            }
+            /* 社交底座上的状态指示器 */
+            .status-indicator {
+                position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
+                background: var(--c-green); color: #2d3436; font-weight: 800; font-size: 0.8rem;
+                padding: 4px 12px; border-radius: 20px; border: 2px solid var(--c-dark);
+                box-shadow: 3px 3px 0 rgba(0,0,0,0.1); display: flex; align-items: center; gap: 5px;
+            }
+            .pulse-dot { width: 8px; height: 8px; background: white; border-radius: 50%; animation: pulse 1s infinite; }
+            @keyframes pulse { 0%{opacity:1;} 50%{opacity:0.5;} 100%{opacity:1;} }
+
+            .social-btn {
+                width: 50px; height: 50px; border-radius: 50%; border: 3px solid var(--c-dark);
+                display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+                text-decoration: none; color: var(--c-dark); transition: 0.2s; background: var(--c-card-bg);
+                overflow: hidden; position: relative;
+            }
+            .social-btn::after {
+                content: ''; position: absolute; width: 100%; height: 100%; background: var(--c-dark);
+                top: 100%; left: 0; transition: top 0.2s; z-index: -1;
+            }
+            .social-btn:hover { transform: scale(1.15) rotate(10deg); color: var(--c-bg-pc); border-color: var(--c-dark); }
+            .social-btn:hover::after { top: 0; }
+            .sb-git:hover { background: #333; } .sb-tw:hover { background: #1DA1F2; } 
+            .sb-bi:hover { background: #00A1D6; } .sb-em:hover { background: #FFD93D; color: var(--c-dark); }
+
+            /* 🆕 [新增] 内容区域样式 */
+            .content-section {
+                display: flex; flex-direction: column; gap: 20px; align-items: flex-start; margin-bottom: 0; z-index: 5;
+                animation: popIn 0.6s 0.7s backwards;
+                padding-bottom: 60px; /* 增加底部间距，防止被跑马灯遮挡 */
+            }
+            .about-box {
+                background: var(--c-card-bg); border: 4px solid var(--c-dark); border-radius: 20px;
+                padding: 20px 30px; max-width: 450px;
+                box-shadow: 8px 8px 0 var(--c-dark);
+                transform: rotate(-1deg); transition: transform 0.3s, background 0.5s, border-color 0.5s;
+                position: relative;
+                animation: floatBox 6s ease-in-out infinite;
+            }
+            @keyframes floatBox {
+                0%, 100% { transform: rotate(-1deg) translateY(0); }
+                50% { transform: rotate(-1deg) translateY(-8px); }
+            }
+            /* 装饰性图钉 */
+            .about-box::before {
+                content: ''; position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+                width: 15px; height: 15px; background: var(--c-red); border-radius: 50%;
+                border: 2px solid var(--c-dark); box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+            }
+            .about-box:hover { transform: rotate(0deg) scale(1.02); animation-play-state: paused; }
+            .about-box h2 { font-family: 'Bangers', cursive; font-size: 2rem; color: var(--c-blue); margin-bottom: 10px; letter-spacing: 1px; }
+            .about-box p { font-family: 'Quicksand', sans-serif; font-weight: 700; color: var(--c-text); line-height: 1.5; font-size: 1rem; }
+
+            .skills-container { display: flex; gap: 10px; flex-wrap: wrap; max-width: 400px; justify-content: flex-start; margin-top: 5px; }
+            .skill-tag {
+                padding: 6px 14px; border: 3px solid var(--c-dark); border-radius: 50px;
+                font-weight: 800; font-size: 0.85rem; background: var(--c-card-bg); color: var(--c-text);
+                box-shadow: 3px 3px 0 var(--c-dark); cursor: default;
+                transition: transform 0.2s, background 0.5s, border-color 0.5s; 
+            }
+            @keyframes shake {
+                0% { transform: translate(1px, 1px) rotate(0deg); }
+                10% { transform: translate(-1px, -2px) rotate(-1deg); }
+                20% { transform: translate(-3px, 0px) rotate(1deg); }
+                30% { transform: translate(3px, 2px) rotate(0deg); }
+                40% { transform: translate(1px, -1px) rotate(1deg); }
+                50% { transform: translate(-1px, 2px) rotate(-1deg); }
+                60% { transform: translate(-3px, 1px) rotate(0deg); }
+                70% { transform: translate(3px, 1px) rotate(-1deg); }
+                80% { transform: translate(-1px, -1px) rotate(1deg); }
+                90% { transform: translate(1px, 2px) rotate(0deg); }
+                100% { transform: translate(1px, -2px) rotate(-1deg); }
+            }
+            .skill-tag:hover { 
+                animation: shake 0.5s infinite; 
+                background: var(--c-dark); 
+                color: var(--c-bg-pc); 
+                transform: none !important; /* Override previous transform */
+            }
+            .st-1 { border-color: var(--c-yellow); transform: rotate(-3deg); }
+            .st-2 { border-color: var(--c-red); transform: rotate(2deg); }
+            .st-3 { border-color: var(--c-blue); transform: rotate(-2deg); }
+            .st-4 { border-color: var(--c-purple); transform: rotate(3deg); }
+            .st-5 { border-color: var(--c-green); transform: rotate(-1deg); }
+
+            /* 🆕 [新增] 装饰背景元素样式 */
+            .deco-bg-element {
+                position: absolute; pointer-events: none; z-index: 0; opacity: 0.4;
+            }
+            .dbe-1 {
+                top: 20%; right: 5%; width: 100px; height: 100px;
+                background-image: radial-gradient(var(--c-dark) 20%, transparent 20%);
+                background-size: 20px 20px;
+                animation: spinSlow 30s linear infinite;
+            }
+            .dbe-2 {
+                bottom: 20%; left: 5%; width: 120px; height: 20px;
+                background: repeating-linear-gradient(45deg, var(--c-red), var(--c-red) 10px, transparent 10px, transparent 20px);
+                transform: rotate(-45deg);
+            }
+
+            /* 🆕 [新增] 技术栈跑马灯 */
+            .tech-stack-marquee {
+                width: 100%;
+                max-width: 450px; /* 限制宽度，与上方卡片对齐 */
+                overflow: hidden;
+                margin-top: 10px;
+                padding: 8px 0;
+                background: rgba(255, 255, 255, 0.5);
+                border-radius: 12px;
+                border: 2px solid var(--c-dark);
+                box-shadow: 4px 4px 0 var(--c-shadow);
+            }
+            .tech-track {
+                display: flex;
+                gap: 25px;
+                width: max-content;
+                animation: scrollTech 15s linear infinite;
+            }
+            .tech-icon {
+                font-size: 1.8rem;
+                color: var(--c-dark);
+                transition: transform 0.3s;
+            }
+            .tech-icon:hover {
+                transform: scale(1.2) rotate(10deg);
+                color: var(--c-blue);
+            }
+            @keyframes scrollTech {
+                0% { transform: translateX(0); }
+                100% { transform: translateX(-50%); }
+            }
+
+            /* 🆕 [新增] 3D 按钮 */
+            .btn-3d {
+                display: inline-block;
+                padding: 12px 30px;
+                font-family: 'Bangers', cursive;
+                font-size: 1.5rem;
+                color: white;
+                background: var(--c-red);
+                border: 3px solid var(--c-dark);
+                border-radius: 10px;
+                box-shadow: 5px 5px 0 var(--c-dark);
+                text-decoration: none;
+                transition: transform 0.1s, box-shadow 0.1s;
+                margin-top: 20px;
+                letter-spacing: 1px;
+            }
+            .btn-3d:active {
+                transform: translate(2px, 2px);
+                box-shadow: 3px 3px 0 var(--c-dark);
+            }
+            .btn-3d:hover {
+                background: var(--c-yellow);
+                color: var(--c-dark);
+            }
+
+            /* 🆕 [新增] 流光文字效果 (Shimmer) */
+            .shimmer-text {
+                background: linear-gradient(45deg, var(--c-blue), var(--c-red), var(--c-yellow), var(--c-green), var(--c-blue));
+                background-size: 300% auto;
+                color: transparent;
+                -webkit-background-clip: text;
+                background-clip: text;
+                animation: shimmer 3s linear infinite;
+                display: inline-block;
+            }
+            @keyframes shimmer {
+                to { background-position: 300% center; }
+            }
+
+            /* 🔁 底部跑马灯 (警示带风格) */
+            .scrolling-banner {
+                position: fixed; bottom: 0; left: 0; width: 100%; height: 50px;
+                background: var(--c-dark); color: var(--c-yellow);
+                display: flex; align-items: center; overflow: hidden;
+                z-index: 100; border-top: 4px solid var(--c-dark);
+                box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            }
+            /* 跑马灯上方装饰条 */
+            .scrolling-banner::before {
+                content: ''; position: absolute; top: -10px; left: 0; width: 100%; height: 10px;
+                background: repeating-linear-gradient(
+                    45deg,
+                    var(--c-yellow),
+                    var(--c-yellow) 10px,
+                    var(--c-dark) 10px,
+                    var(--c-dark) 20px
+                );
+                border-top: 3px solid var(--c-dark);
+            }
+
+            .banner-content { 
+                display: flex; white-space: nowrap; 
+                animation: scrollText 20s linear infinite; 
+                will-change: transform; 
+            }
+            .banner-item { 
+                font-family: 'Bangers', cursive; font-size: 1.5rem; 
+                margin: 0 40px; display: flex; align-items: center; gap: 15px; 
+                text-transform: uppercase; letter-spacing: 2px; 
+                text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+            }
+            .banner-item i { color: white; animation: spinSlow 5s linear infinite; }
+            
+            @keyframes scrollText { 
+                0% { transform: translateX(0); } 
+                100% { transform: translateX(-50%); } 
+            }
+            
+            #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99; }
+        }
+
+        /* ==================== 📱 手机端 (保持完美) ==================== */
+        @media (max-width: 768px) {
+            body {
+                font-family: 'Quicksand', sans-serif;
+                background: linear-gradient(160deg, #fdfbfb 0%, #ebedee 100%);
+                min-height: 100vh; padding: 20px;
+                display: flex; flex-direction: column; align-items: center;
+                overflow-x: hidden;
+            }
+            .desktop-only, .bg-big-text, .side-deco, .corner-sticker, .cursor-dot, .cursor-outline, .floating-shape { display: none !important; }
+
+            .aurora-bg {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+                background: radial-gradient(at 0% 0%, hsla(253,16%,7%,0) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(225,39%,30%,0) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(339,49%,30%,0) 0, transparent 50%);
+                background-color: #fff0f5;
+            }
+            .blob { position: absolute; filter: blur(60px); opacity: 0.6; animation: moveBlob 10s infinite alternate; }
+            .b1 { top: 10%; left: -10%; width: 200px; height: 200px; background: #FFD93D; }
+            .b2 { bottom: 20%; right: -10%; width: 250px; height: 250px; background: #FF6B6B; animation-delay: -5s; }
+            @keyframes moveBlob { from {transform: translate(0,0);} to {transform: translate(20px, 40px);} }
+
+            .mobile-header { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-top: 15px; margin-bottom: 35px; }
+            .brand { font-size: 2.2rem; font-weight: 800; color: white; text-shadow: 0 4px 10px rgba(255,107,107,0.4); font-family: 'Fredoka', sans-serif; }
+            .greeting { background: rgba(255,255,255,0.6); backdrop-filter: blur(15px); padding: 8px 16px; border-radius: 20px; color: #ff6b6b; font-weight: 700; box-shadow: 0 5px 15px rgba(255,107,107,0.1); display: flex; align-items: center; gap: 8px; }
+
+            .nav-deck { display: grid; grid-template-columns: 1fr; gap: 20px; width: 100%; }
+
+            .card {
+                position: relative; background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(20px); border-radius: 32px; padding: 0 25px;
+                text-decoration: none; display: flex; align-items: center; height: 110px;
+                border: 2px solid transparent; background-clip: padding-box;
+                box-shadow: 0 15px 35px rgba(0,0,0,0.08); transition: transform 0.1s; overflow: hidden;
+                animation: slideUpFade 0.6s ease-out backwards;
+            }
+            @keyframes slideUpFade { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+            .card:nth-child(1) { animation-delay: 0.1s; }
+            .card:nth-child(2) { animation-delay: 0.2s; }
+            .card:nth-child(3) { animation-delay: 0.3s; }
+
+            .card::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; left: 0; z-index: -1; margin: -2px; border-radius: inherit; background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0)); }
+            .card:active { transform: scale(0.96); }
+
+            .card-text { flex: 1; display: flex; flex-direction: column; }
+            .card-title-mob { font-size: 1.5rem; font-weight: 800; color: #444; margin-bottom: 5px; }
+            .card-sub-mob { font-size: 0.9rem; font-weight: 600; color: #9aa0a6; }
+            .mini-icon { font-size: 1.2rem; margin-right: 20px; color: var(--color-ref); animation: floatIcon 3s infinite ease-in-out; }
+            @keyframes floatIcon { 0%,100%{transform:translateY(0) rotate(-5deg);} 50%{transform:translateY(-5px) rotate(5deg);} }
+            .card-icon-bg { width: 64px; height: 64px; border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: white; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transform: rotate(6deg); background: var(--grad-ref); }
+            
+            .bbs-card { --color-ref: #FFD93D; --grad-ref: linear-gradient(135deg, #FFD93D 0%, #F6C90E 100%); }
+            .blog-card { --color-ref: #FF6B6B; --grad-ref: linear-gradient(135deg, #FF6B6B 0%, #FF4757 100%); }
+            .video-card { --color-ref: #4D96FF; --grad-ref: linear-gradient(135deg, #4D96FF 0%, #3742fa 100%); }
+
+            .social-dock { margin-top: 40px; width: 100%; margin-bottom: 20px; background: rgba(255,255,255,0.5); padding: 20px 30px; border-radius: 35px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(15px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+            .social-btn { width: 48px; height: 48px; background: white; border-radius: 20px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 1.4rem; text-decoration: none; box-shadow: 0 5px 12px rgba(0,0,0,0.06); }
+        }
+
+        /* ☁️ [新增] 漂浮云朵 */
+        .cloud {
+            position: fixed;
+            background: #fff;
+            border-radius: 50px;
+            z-index: 0;
+            opacity: 0.8;
+            pointer-events: none;
+            animation: floatCloud linear infinite;
+            box-shadow: 8px 8px 0 rgba(0,0,0,0.05);
+        }
+        .cloud::after, .cloud::before {
+            content: ''; position: absolute; background: inherit; border-radius: 50%;
+        }
+        .cloud::after { width: 40px; height: 40px; top: -20px; left: 15px; }
+        .cloud::before { width: 30px; height: 30px; top: -15px; left: 40px; }
+        
+        .c-1 { top: 10%; left: -10%; width: 100px; height: 40px; animation-duration: 25s; }
+        .c-2 { top: 60%; left: -15%; width: 120px; height: 50px; animation-duration: 35s; animation-delay: -10s; }
+        .c-3 { top: 85%; left: -20%; width: 80px; height: 30px; animation-duration: 45s; animation-delay: -5s; }
+
+        @keyframes floatCloud {
+            from { transform: translateX(-150px); }
+            to { transform: translateX(100vw); }
+        }
+
+        /* 🦶 [新增] 页脚 */
+        .footer-mini {
+            margin-top: 40px;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            color: var(--c-dark);
+            opacity: 0.6;
+            font-size: 0.9rem;
+            display: flex; align-items: center; gap: 5px;
+        }
+        .footer-mini i { color: var(--c-red); animation: beat 1s infinite; }
+        @keyframes beat { 0%,100%{transform:scale(1);} 50%{transform:scale(1.3);} }
+
+        /* 👨‍🚀 [新增] 漂浮宇航员 */
+        .astronaut-container {
+            position: fixed; bottom: 30px; right: 30px;
+            font-size: 3.5rem; color: var(--c-dark);
+            animation: floatAstronaut 6s ease-in-out infinite;
+            z-index: 100; transition: transform 0.3s;
+            filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.1));
+            cursor: pointer;
+        }
+        .astronaut-container:hover {
+            transform: scale(1.2) rotate(10deg);
+            color: var(--c-blue);
+        }
+        @keyframes floatAstronaut {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        /* 🎨 [新增] 创意贴纸 (Click to Stamp) */
+        .sticker {
+            position: absolute;
+            font-size: 2.5rem;
+            pointer-events: none;
+            z-index: 1;
+            animation: stickerPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.1));
+            --rot: 0deg; /* Default rotation */
+        }
+        @keyframes stickerPop {
+            0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+            100% { transform: scale(1) rotate(var(--rot)); opacity: 1; }
+        }
+
+        /* 🔦 [新增] 暗黑模式光晕光标 */
+        [data-theme="dark"] .cursor-outline {
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-color: rgba(255,255,255,0.5);
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        /* 📟 [新增] Matrix Canvas */
+        #matrix-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 99990; pointer-events: none; opacity: 0;
+            transition: opacity 1s; background: black;
+        }
+        body.matrix-mode #matrix-canvas { opacity: 1; pointer-events: auto; }
+
+        /* 🎭 [新增] 心情追踪器 */
+        .mood-tracker {
+            display: flex; align-items: center; gap: 15px;
+            background: var(--c-card-bg); border: 3px solid var(--c-dark);
+            padding: 10px 20px; border-radius: 50px;
+            box-shadow: 4px 4px 0 var(--c-dark);
+            margin-top: 10px;
+            transition: transform 0.2s;
+        }
+        .mood-tracker:hover { transform: scale(1.05); }
+        .mood-label { font-family: 'Bangers', cursive; font-size: 1.2rem; color: var(--c-dark); letter-spacing: 1px; }
+        .mood-options { display: flex; gap: 10px; }
+        .mood-btn {
+            background: none; border: none; font-size: 1.5rem; cursor: pointer;
+            transition: transform 0.2s; filter: grayscale(1);
+        }
+        .mood-btn:hover, .mood-btn.active { transform: scale(1.3); filter: grayscale(0); }
+        
+        /* ✨ [美化] 技能标签流光效果 */
+        .skill-tag {
+            position: relative; overflow: hidden;
+        }
+        .skill-tag::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            transform: skewX(-25deg);
+            animation: shine 3s infinite;
+        }
+        @keyframes shine {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
+        }
+
+        /* 🌈 [新增] 全息卡片效果 (Holographic) */
+        .card::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(105deg, transparent 20%, rgba(255,255,255,0.4) 25%, transparent 30%);
+            transform: translateX(-100%);
+            transition: transform 0s;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .card:hover::after {
+            transform: translateX(100%);
+            transition: transform 0.8s;
+        }
+
+        /* 🎁 [新增] 神秘宝箱 (Mystery Box) */
+        .mystery-box {
+            position: fixed; bottom: 30px; left: 30px;
+            font-size: 3rem; color: var(--c-purple);
+            cursor: pointer; z-index: 100;
+            animation: floatBox 4s ease-in-out infinite;
+            transition: transform 0.3s;
+            filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.1));
+        }
+        .mystery-box:hover { transform: scale(1.2) rotate(-10deg); }
+        .mystery-box:active { transform: scale(0.9); }
+        @keyframes floatBox {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* 🤸 [彩蛋] 重力下落 */
+        .gravity-fall {
+            transition: transform 1s cubic-bezier(0.5, 0, 1, 0.5);
+            transform: translateY(100vh) rotate(20deg) !important;
+            pointer-events: none;
+        }
+        
+        /* 🌗 [彩蛋] 反转世界 */
+        html.invert-mode { filter: invert(1); }
+        html.invert-mode img, html.invert-mode video { filter: invert(1); } /* 图片保持原色 */
+
+        /* 🐱 [创意] 像素猫 */
+        #pixel-cat {
+            position: fixed;
+            bottom: 0;
+            left: -50px;
+            font-size: 2rem;
+            color: var(--c-text);
+            z-index: 999;
+            transition: left 10s linear, transform 0.2s;
+            cursor: pointer;
+            filter: drop-shadow(2px 2px 0 var(--c-primary));
+            pointer-events: auto;
+        }
+        #pixel-cat.walking {
+            animation: cat-bounce 0.5s infinite alternate;
+        }
+        @keyframes cat-bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-5px); }
+        }
+
+        /* 🔦 [彩蛋] 聚光灯模式 */
+        .spotlight-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), transparent 100px, rgba(0,0,0,0.98) 150px);
+            z-index: 9999;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+            display: none;
+        }
+        .spotlight-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 🖱️ [创意] 自定义右键菜单 */
+        .custom-context-menu {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--c-text);
+            border-radius: 10px;
+            padding: 8px;
+            z-index: 10000;
+            display: none;
+            box-shadow: 5px 5px 0 var(--c-primary);
+            min-width: 160px;
+            font-family: 'Courier New', monospace;
+        }
+        [data-theme="dark"] .custom-context-menu {
+            background: rgba(30, 30, 30, 0.95);
+            border-color: var(--c-text);
+        }
+        .ctx-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.2s;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--c-text);
+        }
+        .ctx-item:hover {
+            background: var(--c-primary);
+            color: #fff;
+            transform: translateX(5px);
+        }
+        .ctx-divider {
+            height: 1px;
+            background: var(--c-border);
+            margin: 5px 0;
+        }
+
+        /* 🫨 [动画] 撞击抖动 */
+        .wobble-effect {
+            animation: wobble 0.5s ease-in-out;
+        }
+        @keyframes wobble {
+            0%, 100% { transform: translateX(0); }
+            15% { transform: translateX(-10px) rotate(-5deg); }
+            30% { transform: translateX(8px) rotate(3deg); }
+            45% { transform: translateX(-6px) rotate(-3deg); }
+            60% { transform: translateX(4px) rotate(2deg); }
+            75% { transform: translateX(-2px) rotate(-1deg); }
+        }
+
+        /* 📺 [彩蛋] CRT 复古显示器效果 - 修复版 */
+        .crt-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            z-index: 9998;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            mix-blend-mode: hard-light;
+        }
+        .crt-overlay.active {
+            opacity: 1;
+            animation: flicker 0.15s infinite;
+        }
+        /* Vignette */
+        .crt-overlay::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.4) 100%);
+            box-shadow: inset 0 0 150px rgba(0,0,0,0.7);
+            pointer-events: none;
+        }
+        
+        @keyframes flicker {
+            0% { opacity: 0.9; }
+            5% { opacity: 0.85; }
+            10% { opacity: 0.9; }
+            15% { opacity: 0.95; }
+            20% { opacity: 0.9; }
+            25% { opacity: 0.85; }
+            30% { opacity: 0.9; }
+            35% { opacity: 0.95; }
+            40% { opacity: 0.9; }
+            45% { opacity: 0.85; }
+            50% { opacity: 0.9; }
+            55% { opacity: 0.95; }
+            60% { opacity: 0.9; }
+            65% { opacity: 0.85; }
+            70% { opacity: 0.9; }
+            75% { opacity: 0.95; }
+            80% { opacity: 0.9; }
+            85% { opacity: 0.85; }
+            90% { opacity: 0.9; }
+            95% { opacity: 0.95; }
+            100% { opacity: 0.9; }
+        }
+
+        /* 📟 [创意] 终端模拟器 */
+        .terminal-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 400px;
+            background-color: rgba(10, 10, 10, 0.95);
+            border: 2px solid #33ff00;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(51, 255, 0, 0.2);
+            z-index: 10001;
+            display: none;
+            flex-direction: column;
+            font-family: 'Courier New', monospace;
+            padding: 10px;
+            color: #33ff00;
+        }
+        .terminal-header {
+            border-bottom: 1px solid #33ff00;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .terminal-body {
+            flex: 1;
+            overflow-y: auto;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .terminal-input-line {
+            display: flex;
+            margin-top: 5px;
+        }
+        .terminal-prompt {
+            margin-right: 10px;
+            color: #33ff00;
+        }
+        #term-input {
+            background: transparent;
+            border: none;
+            color: #33ff00;
+            font-family: inherit;
+            font-size: inherit;
+            flex: 1;
+            outline: none;
+        }
+
+        /* 🧲 [动画] 磁性按钮 */
+        .magnetic-btn {
+            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* 📜 [动画] 滚动显现 */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 🎨 [创意] 绘图模式 */
+        #draw-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9997; /* Below CRT/Spotlight but above content */
+            pointer-events: none; /* Default off */
+            cursor: crosshair;
+        }
+        #draw-canvas.active {
+            pointer-events: auto;
+            background: rgba(0,0,0,0.1);
+        }
+
+        /* ✨ [动画] 魔法尘埃 */
+        .magic-dust {
+            position: fixed;
+            pointer-events: none;
+            width: 8px;
+            height: 8px;
+            background: var(--c-primary);
+            border-radius: 50%;
+            animation: dust-fade 1s forwards;
+            z-index: 9999;
+            box-shadow: 0 0 5px var(--c-primary);
+        }
+        @keyframes dust-fade {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0) translateY(-20px); opacity: 0; }
+        }
+
+/* 🆕 [新增] 霓虹文字效果 (Neon) */
+            .neon-text {
+                color: #fff;
+                text-shadow:
+                    0 0 5px #fff,
+                    0 0 10px #fff,
+                    0 0 20px var(--c-purple),
+                    0 0 40px var(--c-purple),
+                    0 0 80px var(--c-purple);
+                animation: neonPulse 1.5s infinite alternate;
+            }
+            @keyframes neonPulse {
+                from { text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px var(--c-purple), 0 0 40px var(--c-purple); }
+                to { text-shadow: 0 0 2px #fff, 0 0 5px #fff, 0 0 10px var(--c-purple), 0 0 20px var(--c-purple); }
+        }
+
+        /* 🐍 [彩蛋] 贪吃蛇游戏机 */
+        .game-boy-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 320px;
+            height: 500px;
+            background: #c0c0c0;
+            border-radius: 10px 10px 40px 10px;
+            box-shadow: -5px 5px 20px rgba(0,0,0,0.5), inset 2px 2px 5px rgba(255,255,255,0.5);
+            z-index: 10005;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            border: 2px solid #888;
+        }
+        .gb-screen-border {
+            background: #555;
+            padding: 15px 25px;
+            border-radius: 10px 10px 30px 10px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .gb-screen {
+            background: #9bbc0f;
+            width: 100%;
+            height: 200px;
+            border: 2px solid #444;
+            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+            color: #0f380f;
+        }
+        .gb-controls {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 10px;
+        }
+        .d-pad {
+            width: 90px;
+            height: 90px;
+            position: relative;
+        }
+        .d-pad div {
+            background: #333;
+            position: absolute;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .d-pad .up { top: 0; left: 30px; width: 30px; height: 30px; }
+        .d-pad .down { bottom: 0; left: 30px; width: 30px; height: 30px; }
+        .d-pad .left { top: 30px; left: 0; width: 30px; height: 30px; }
+        .d-pad .right { top: 30px; right: 0; width: 30px; height: 30px; }
+        .d-pad .center { top: 30px; left: 30px; width: 30px; height: 30px; }
+        
+        .action-btns {
+            display: flex;
+            gap: 15px;
+            transform: rotate(-25deg);
+            margin-bottom: 20px;
+        }
+        .ab-btn {
+            width: 35px;
+            height: 35px;
+            background: #8b0000;
+            border-radius: 50%;
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+            cursor: pointer;
+        }
+        .ab-btn:active { transform: scale(0.95); }
+
+        /* 🌦️ [美化] 玻璃态天气组件 - 已移除 */
+        /* .weather-widget { ... } */
+
+        /* 💧 [动画] 液体按钮 */
+        .liquid-btn {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .liquid-btn::before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translate(-50%, 0);
+            width: 200%;
+            height: 200%;
+            background: var(--c-primary);
+            border-radius: 40%;
+            transition: transform 0.6s ease;
+            z-index: -1;
+        }
+        .liquid-btn:hover::before {
+            transform: translate(-50%, -75%) rotate(20deg);
+        }
+
+        /* 🌌 [动画] 曲速引擎 (Warp Speed) */
+        .warp-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            z-index: 10010;
+            display: none;
+            perspective: 1000px;
+            overflow: hidden;
+        }
+        .warp-star {
+            position: absolute;
+            width: 2px; height: 2px;
+            background: #fff;
+            border-radius: 50%;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+        }
+        @keyframes warp-move {
+            0% { transform: translate(-50%, -50%) translateZ(0); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translate(-50%, -50%) translateZ(1000px); opacity: 0; }
+        }
+
+        /* 🫰 [彩蛋] 灭霸响指 (Thanos Snap) */
+        .snap-dust {
+            transition: transform 1s ease-out, opacity 1s ease-out;
+            filter: blur(0);
+        }
+        .snap-dust.snapped {
+            transform: translate(20px, -20px) rotate(10deg) scale(0.8);
+            opacity: 0;
+            filter: blur(4px);
+            pointer-events: none;
+        }
+
+        /* 📐 [彩蛋] 蓝图模式 (Debug Mode) */
+        .debug-mode * {
+            outline: 1px solid #0f0 !important;
+            background: rgba(0, 20, 0, 0.1) !important;
+            color: #0f0 !important;
+            box-shadow: none !important;
+            text-shadow: none !important;
+            font-family: 'Courier New', monospace !important;
+        }
+        .debug-mode body {
+            background: #000 !important;
+        }
+
+        /* 🍞 [美化] 自定义通知 (Toast) */
+        .toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10020;
+        }
+        .toast {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-left: 5px solid var(--c-primary);
+            padding: 15px 20px;
+            border-radius: 4px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            font-family: 'Fredoka', sans-serif;
+            color: var(--c-text);
+            min-width: 250px;
+        }
+        .toast.show { transform: translateX(0); }
+        .toast i { font-size: 1.2rem; color: var(--c-primary); }
+
+        /* 🕳️ [彩蛋] 黑洞效果 */
+        .black-hole-container {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 0; height: 0; border-radius: 50%;
+            background: #000;
+            box-shadow: 0 0 50px #000, 0 0 100px #4b0082, 0 0 200px #800080;
+            z-index: 99999;
+            transition: width 2s, height 2s;
+            pointer-events: none;
+        }
+        .black-hole-container.active { width: 300px; height: 300px; }
+        .sucked-into-void {
+            transition: all 1.5s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+            transform: translate(var(--tx), var(--ty)) scale(0) rotate(720deg) !important;
+            opacity: 0;
+        }
+
+        /* 🫧 [彩蛋] 泡泡纸模式 */
+        .bubble-wrap-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); z-index: 10030;
+            display: flex; flex-wrap: wrap; justify-content: center; align-content: center;
+            gap: 5px; overflow: hidden; padding: 20px;
+            animation: fadeIn 0.5s;
+        }
+        .bubble {
+            width: 50px; height: 50px; background: rgba(255,255,255,0.2);
+            border-radius: 50%; box-shadow: inset 2px 2px 5px rgba(255,255,255,0.5), 2px 2px 5px rgba(0,0,0,0.2);
+            cursor: pointer; transition: transform 0.1s;
+        }
+        .bubble:active { transform: scale(0.9); }
+        .bubble.popped {
+            background: rgba(255,255,255,0.05);
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
+            transform: scale(0.95); pointer-events: none;
+        }
+
+        /* 🍎 [彩蛋] 重力模式 */
+        .gravity-active {
+            position: fixed !important;
+            z-index: 1000 !important;
+            transition: none !important; /* Disable CSS transitions for physics */
+            margin: 0 !important; /* Reset margins for accurate positioning */
+        }
+
+        /* 👾 [彩蛋] 像素模式 (8-Bit) */
+        body.pixel-mode {
+            font-family: 'VT323', monospace !important;
+        }
+        body.pixel-mode * {
+            border-radius: 0 !important;
+            box-shadow: 4px 4px 0 var(--c-dark) !important; /* Hard shadows */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        body.pixel-mode .cursor-outline {
+            border-radius: 0 !important;
+            border: 2px solid var(--c-red) !important;
+            transform: rotate(45deg) !important;
+        }
+        body.pixel-mode .card, body.pixel-mode .social-btn {
+            border-width: 4px !important;
+        }
+
+        /* 💻 [彩蛋] 黑客模拟 */
+        .hack-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; color: #0f0;
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            z-index: 10050;
+            overflow: hidden;
+            display: none;
+            font-size: 12px;
+            line-height: 1.2;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+        .hack-cursor {
+            display: inline-block; width: 8px; height: 14px; background: #0f0;
+            animation: blink 0.1s infinite;
+        }
+
+        /* 🐟 [彩蛋] 水族馆 */
+        .fish {
+            position: fixed;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 90;
+            transition: transform 0.5s;
+            filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.1));
+        }
+
+        /* 🎹 [彩蛋] 钢琴模式提示 */
+        .piano-overlay {
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.8); color: white; padding: 10px 20px;
+            border-radius: 20px; display: none; font-family: monospace;
+            pointer-events: none; z-index: 10060;
+            font-size: 1.2rem;
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <!-- 🚫 加载遮罩 (解决刷新闪烁/偏移) -->
+    <div class="loader-curtain desktop-only"></div>
+
+    <!-- 🆕 顶部滚动进度条 -->
+    <div class="scroll-progress desktop-only"></div>
+    <div class="scroll-rocket desktop-only"><i class="fa-solid fa-rocket"></i></div>
+
+    <!-- 🆕 背景噪点 -->
+    <div class="noise-overlay desktop-only"></div>
+
+    <!-- 🖱️ 鼠标光标 -->
+    <div class="cursor-dot desktop-only"></div>
+    <div class="cursor-outline desktop-only"></div>
+
+    <!-- 🎨 [美化] 漂浮背景几何体 -->
+    <div class="ufo-container desktop-only" onclick="this.style.animationDuration='2s'; setTimeout(()=>this.style.animationDuration='20s', 2000);" title="Click to Warp Speed!"><i class="fa-solid fa-shuttle-space ufo-icon"></i></div>
+    <div class="cloud c-1 desktop-only"></div>
+    <div class="cloud c-2 desktop-only"></div>
+    <div class="cloud c-3 desktop-only"></div>
+    <div class="floating-shape fs-1 desktop-only"></div>
+
+    <!-- 👨‍🚀 [新增] 漂浮宇航员 -->
+    <div class="astronaut-container desktop-only" title="I'm lost...">
+        <i class="fa-solid fa-user-astronaut"></i>
+    </div>
+
+    <!-- 🎁 [新增] 神秘宝箱 -->
+    <div class="mystery-box desktop-only" title="Open Me!" onclick="openMysteryBox()">
+        <i class="fa-solid fa-gift"></i>
+    </div>
+
+    <div class="floating-shape fs-2 desktop-only"></div>
+    <div class="floating-shape fs-3 desktop-only"></div>
+    <div class="floating-shape fs-4 desktop-only"><i class="fa-solid fa-star-of-life"></i></div>
+    <div class="floating-shape fs-5 desktop-only"><i class="fa-solid fa-bolt"></i></div>
+    <div class="floating-shape fs-6 desktop-only"></div>
+    <div class="comet desktop-only"></div>
+
+    <!-- 📱 手机背景 -->
+    <div class="aurora-bg mobile-only">
+        <div class="blob b1"></div><div class="blob b2"></div>
+    </div>
+
+    <!-- 🧱 背景呼吸文字 -->
+    <div class="bg-big-text desktop-only">KEEP CREATING</div>
+
+    <!-- ⛓️ 侧边装饰 -->
+    <div class="side-deco left desktop-only">
+        <div class="side-icon"><i class="fa-solid fa-plus"></i></div>
+        <div class="side-icon"><i class="fa-regular fa-circle"></i></div>
+        <div class="side-icon"><i class="fa-solid fa-xmark"></i></div>
+        <div class="side-icon"><i class="fa-solid fa-square"></i></div>
+    </div>
+    <div class="side-deco right desktop-only">
+        <div class="side-icon"><i class="fa-solid fa-bolt"></i></div>
+        <div class="side-icon"><i class="fa-solid fa-heart"></i></div>
+        <div class="side-icon"><i class="fa-solid fa-music"></i></div>
+        <div class="side-icon"><i class="fa-solid fa-fire"></i></div>
+    </div>
+
+    <!-- 🏷️ 角落贴纸 -->
+    <div class="corner-sticker cs-1 desktop-only active-hover">ME2U SPACE</div>
+    <div class="corner-sticker cs-2 desktop-only active-hover">100% REAL</div>
+
+    <!-- 🌟 彩蛋容器 -->
+    <div id="sticker-container"></div>
+    <canvas id="confetti-canvas" class="desktop-only"></canvas>
+    <canvas id="matrix-canvas" class="desktop-only"></canvas>
+    <canvas id="draw-canvas" class="desktop-only"></canvas>
+
+    <!-- 🐍 [新增] 游戏机界面 -->
+    <div id="gameboy" class="game-boy-overlay">
+        <div class="gb-screen-border">
+            <div style="text-align:center; color:#888; font-size:10px; margin-bottom:5px;">DOT MATRIX WITH STEREO SOUND</div>
+            <canvas id="snake-canvas" class="gb-screen" width="200" height="200"></canvas>
+        </div>
+        <div style="color:#333; font-style:italic; font-weight:bold; margin-bottom:10px;">Nintendo GAME BOY</div>
+        <div class="gb-controls">
+            <div class="d-pad">
+                <div class="up" onclick="changeSnakeDir('up')"></div>
+                <div class="down" onclick="changeSnakeDir('down')"></div>
+                <div class="left" onclick="changeSnakeDir('left')"></div>
+                <div class="right" onclick="changeSnakeDir('right')"></div>
+                <div class="center"></div>
+            </div>
+            <div class="action-btns">
+                <div class="ab-btn" onclick="toggleSnakeGame()" title="B: Exit"></div>
+                <div class="ab-btn" onclick="resetSnakeGame()" title="A: Restart"></div>
+            </div>
+        </div>
+        <div style="display:flex; gap:30px; margin-top:20px;">
+            <div style="width:40px; height:10px; background:#999; border-radius:5px; transform:rotate(-25deg);"></div>
+            <div style="width:40px; height:10px; background:#999; border-radius:5px; transform:rotate(-25deg);"></div>
+        </div>
+    </div>
+
+    <!-- 🌌 [新增] 曲速引擎层 -->
+    <div id="warp-layer" class="warp-overlay"></div>
+
+    <!-- 🍞 [新增] 通知容器 -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- ⏰ 组件 -->
+    <div class="widget-clock desktop-only active-hover" id="clock">00:00</div>
+    <div class="widget-music desktop-only active-hover">
+        <i class="fa-solid fa-music"></i> <div class="bars"><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+    </div>
+    <div class="widget-theme desktop-only active-hover" id="theme-toggle" title="Switch Theme">
+        <i class="fa-solid fa-sun"></i>
+    </div>
+
+    <!-- 🆕 [重构] 桌面端双栏布局容器 -->
+    <div class="main-container desktop-only">
+        <!-- 左侧栏: Logo + 简介 -->
+        <div class="left-col">
+            <!-- 💻 Logo区域 + 打字机动画 -->
+            <div class="logo-container">
+                <div class="logo-wrapper active-hover" onclick="fireConfetti()">
+                    <div class="orbit-sat desktop-only"><span class="satellite"></span></div>
+                    <div class="logo-sparkle"><i class="fa-solid fa-star"></i></div>
+                    <div class="mascot-eyes">
+                        <div class="eye">
+                            <div class="pupil">
+                                <div class="eye-shine"></div>
+                            </div>
+                            <div class="eyelid"></div>
+                        </div>
+                        <div class="eye">
+                            <div class="pupil">
+                                <div class="eye-shine"></div>
+                            </div>
+                            <div class="eyelid"></div>
+                        </div>
+                    </div>
+                    <div class="logo-splash"></div>
+                    <h1 class="logo-text">
+                        <span class="letter">m</span>
+                        <span class="letter">e</span>
+                        <span class="letter">2</span>
+                        <span class="letter">u</span>
+                    </h1>
+                </div>
+                <!-- 打字机效果 -->
+                <br>
+                <div class="typewriter">
+                    <span id="typing-text"></span><span class="cursor"></span>
+                </div>
+            </div>
+
+            <!-- 🆕 [新增] 内容区域: 简介与技能 -->
+            <div class="content-section">
+                <div class="about-box active-hover">
+                    <h2><i class="fa-solid fa-rocket rocket-icon"></i> <span class="shimmer-text">ABOUT ME</span></h2>
+                    <p id="about-text">Full-Stack Dev proficient in <strong>.NET Core</strong>, <strong>Vue</strong> & <strong>SQL Server</strong>. Skilled in <strong>Docker</strong>, <strong>Redis</strong> & <strong>Linux</strong>. Love Algorithms & Architecture.</p>
+                </div>
+                <div class="skills-container">
+                    <div class="skill-tag st-1 active-hover">Vue.js</div>
+                    <div class="skill-tag st-2 active-hover">.NET Core</div>
+                    <div class="skill-tag st-3 active-hover">SQL Server</div>
+                    <div class="skill-tag st-4 active-hover">Docker</div>
+                    <div class="skill-tag st-5 active-hover">Redis</div>
+                    <div class="skill-tag st-1 active-hover">Linux</div>
+                </div>
+
+                <!-- 🆕 [新增] 技术栈跑马灯 -->
+                <div class="tech-stack-marquee active-hover">
+                    <div class="tech-track">
+                        <i class="fa-brands fa-html5 tech-icon"></i>
+                        <i class="fa-brands fa-vuejs tech-icon"></i>
+                        <i class="fa-brands fa-js tech-icon"></i>
+                        <i class="fa-brands fa-java tech-icon"></i>
+                        <i class="fa-brands fa-python tech-icon"></i>
+                        <i class="fa-brands fa-docker tech-icon"></i>
+                        <i class="fa-brands fa-linux tech-icon"></i>
+                        <i class="fa-solid fa-database tech-icon"></i>
+                        <i class="fa-brands fa-microsoft tech-icon"></i>
+                        <!-- 重复一遍以实现无缝滚动 -->
+                        <i class="fa-brands fa-html5 tech-icon"></i>
+                        <i class="fa-brands fa-vuejs tech-icon"></i>
+                        <i class="fa-brands fa-js tech-icon"></i>
+                        <i class="fa-brands fa-java tech-icon"></i>
+                        <i class="fa-brands fa-python tech-icon"></i>
+                        <i class="fa-brands fa-docker tech-icon"></i>
+                        <i class="fa-brands fa-linux tech-icon"></i>
+                        <i class="fa-solid fa-database tech-icon"></i>
+                        <i class="fa-brands fa-microsoft tech-icon"></i>
+                    </div>
+                </div>
+
+                <!-- � [新增] 心情追踪器 (Mood Tracker) -->
+                <div class="mood-tracker active-hover">
+                    <span class="mood-label">Current Mood:</span>
+                    <div class="mood-options">
+                        <button class="mood-btn" data-mood="happy" title="Happy">😄</button>
+                        <button class="mood-btn" data-mood="focus" title="Focused">⚡</button>
+                        <button class="mood-btn" data-mood="chill" title="Chill">☕</button>
+                        <button class="mood-btn" data-mood="sleepy" title="Sleepy">😴</button>
+                    </div>
+                </div>
+
+                <!-- �🆕 [新增] 联系按钮 -->
+                <a href="mailto:hi@me2u.top" class="btn-3d active-hover">
+                    <i class="fa-solid fa-paper-plane"></i> SAY HI!
+                </a>
+            </div>
+
+            <!-- 🆕 [新增] 页脚 -->
+            <div class="footer-mini desktop-only">
+                Made with <i class="fa-solid fa-heart"></i> by Me2U © 2025
+            </div>
+        </div>
+
+        <!-- 右侧栏: 导航卡片 + 社交 -->
+        <div class="right-col">
+            <!-- 导航区域 (已美化: 增加纹理、胶带、光影) -->
+            <div class="nav-deck">
+                <a href="http://bbs.me2u.top" class="card bbs-card active-hover" target="_blank">
+                    <div class="tape desktop-only"></div>
+                    <div class="badge desktop-only">HOT🔥</div>
+                    
+                    <!-- 电脑端内容 -->
+                    <div class="card-icon desktop-only"><i class="fa-solid fa-comments"></i></div>
+                    <div class="card-info desktop-only">
+                        <div class="card-title-pc">BBS</div>
+                        <div class="card-desc-pc">Join the Chat!</div>
+                    </div>
+                </a>
+
+                <a href="http://blog.me2u.top" class="card blog-card active-hover" target="_blank">
+                    <div class="tape desktop-only"></div>
+                    <div class="badge desktop-only" style="background:#2ecc71; left:-15px; right:auto; transform:rotate(-10deg);">NEW✨</div>
+                    
+                    <div class="card-icon desktop-only"><i class="fa-solid fa-pen-nib"></i></div>
+                    <div class="card-info desktop-only">
+                        <div class="card-title-pc">BLOG</div>
+                        <div class="card-desc-pc">Read My Mind</div>
+                    </div>
+                </a>
+
+                <a href="http://video.me2u.top" class="card video-card active-hover" target="_blank">
+                    <div class="tape desktop-only"></div>
+                    <div class="badge desktop-only" style="background:#ff4757;">LIVE🔴</div>
+                    
+                    <div class="card-icon desktop-only"><i class="fa-solid fa-play"></i></div>
+                    <div class="card-info desktop-only">
+                        <div class="card-title-pc">VIDEO</div>
+                        <div class="card-desc-pc">Visual Feast</div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- 社交底座 (已美化: 增加状态指示器) -->
+            <div class="social-dock">
+                <div class="status-indicator desktop-only"><div class="pulse-dot"></div> Online</div>
+                <a href="#" class="social-btn sb-git active-hover"><i class="fa-brands fa-github"></i></a>
+                <a href="#" class="social-btn sb-tw active-hover"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#" class="social-btn sb-bi active-hover"><i class="fa-brands fa-bilibili"></i></a>
+                <a href="mailto:hi@me2u.top" class="social-btn sb-em active-hover"><i class="fa-solid fa-envelope"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 📱 Mobile Header -->
+    <div class="mobile-header mobile-only">
+        <div class="brand">me2u.</div>
+        <div class="greeting" id="greeting"><i class="fa-solid fa-mug-hot"></i> <span>Morning</span></div>
+    </div>
+
+    <!-- 📱 手机端导航 (保持原样) -->
+    <div class="nav-deck mobile-only">
+        <a href="http://bbs.me2u.top" class="card bbs-card active-hover" target="_blank">
+            <div class="card-text">
+                <div class="card-title-mob">Community</div>
+                <div class="card-sub-mob">Let's Chat</div>
+            </div>
+            <div class="mini-icon"><i class="fa-solid fa-comment-dots"></i></div>
+            <div class="card-icon-bg"><i class="fa-solid fa-comments"></i></div>
+        </a>
+
+        <a href="http://blog.me2u.top" class="card blog-card active-hover" target="_blank">
+            <div class="card-text">
+                <div class="card-title-mob">My Blog</div>
+                <div class="card-sub-mob">Read Stories</div>
+            </div>
+            <div class="mini-icon"><i class="fa-solid fa-pen-fancy"></i></div>
+            <div class="card-icon-bg"><i class="fa-solid fa-pen-nib"></i></div>
+        </a>
+
+        <a href="http://video.me2u.top" class="card video-card active-hover" target="_blank">
+            <div class="card-text">
+                <div class="card-title-mob">Videos</div>
+                <div class="card-sub-mob">Watch Fun</div>
+            </div>
+            <div class="mini-icon"><i class="fa-solid fa-circle-play"></i></div>
+            <div class="card-icon-bg"><i class="fa-solid fa-play"></i></div>
+        </a>
+    </div>
+
+    <!-- 📱 手机端社交底座 -->
+    <div class="social-dock mobile-only">
+        <a href="#" class="social-btn sb-git active-hover"><i class="fa-brands fa-github"></i></a>
+        <a href="#" class="social-btn sb-tw active-hover"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#" class="social-btn sb-bi active-hover"><i class="fa-brands fa-bilibili"></i></a>
+        <a href="mailto:hi@me2u.top" class="social-btn sb-em active-hover"><i class="fa-solid fa-envelope"></i></a>
+    </div>
+
+    <!-- 🆕 [新增] 装饰性背景元素 -->
+    <div class="deco-bg-element dbe-1 desktop-only"></div>
+    <div class="deco-bg-element dbe-2 desktop-only"></div>
+
+    <!-- 🔁 底部跑马灯 (警示带风格) -->
+    <div class="scrolling-banner desktop-only active-hover">
+        <div class="banner-content">
+            <div class="banner-item"><i class="fa-solid fa-star"></i> WELCOME TO ME2U</div>
+            <div class="banner-item"><i class="fa-solid fa-bolt"></i> CREATIVITY</div>
+            <div class="banner-item"><i class="fa-solid fa-code"></i> CODE</div>
+            <div class="banner-item"><i class="fa-solid fa-palette"></i> DESIGN</div>
+            <div class="banner-item"><i class="fa-solid fa-heart"></i> LIFE IS GOOD</div>
+            <div class="banner-item"><i class="fa-solid fa-gamepad"></i> HAVE FUN</div>
+            <!-- 重复部分 -->
+            <div class="banner-item"><i class="fa-solid fa-star"></i> WELCOME TO ME2U</div>
+            <div class="banner-item"><i class="fa-solid fa-bolt"></i> CREATIVITY</div>
+            <div class="banner-item"><i class="fa-solid fa-code"></i> CODE</div>
+            <div class="banner-item"><i class="fa-solid fa-palette"></i> DESIGN</div>
+            <div class="banner-item"><i class="fa-solid fa-heart"></i> LIFE IS GOOD</div>
+            <div class="banner-item"><i class="fa-solid fa-gamepad"></i> HAVE FUN</div>
+        </div>
+    </div>
+
+    <!-- 🐱 [新增] 像素猫 -->
+    <div id="pixel-cat" class="desktop-only" title="Meow!"><i class="fa-solid fa-cat"></i></div>
+
+    <!-- 🔦 [新增] 聚光灯层 -->
+    <div id="spotlight" class="spotlight-overlay"></div>
+
+    <!-- 🖱️ [新增] 自定义右键菜单 -->
+    <div id="context-menu" class="custom-context-menu">
+        <div class="ctx-item" onclick="document.getElementById('theme-toggle').click()"><i class="fa-solid fa-circle-half-stroke"></i> Toggle Theme</div>
+        <div class="ctx-item" onclick="openMysteryBox()"><i class="fa-solid fa-gift"></i> Mystery Box</div>
+        <div class="ctx-divider"></div>
+        <div class="ctx-item" onclick="window.location.reload()"><i class="fa-solid fa-rotate-right"></i> Reload System</div>
+        <div class="ctx-item" onclick="showToast('⌨️ Try: konami, snake, warp, snap... (Press F12)', 'keyboard')"><i class="fa-solid fa-keyboard"></i> Cheats / 彩蛋指令</div>
+    </div>
+
+    <!-- 📺 [新增] CRT 效果层 -->
+    <div id="crt-layer" class="crt-overlay"></div>
+
+    <!-- 📟 [新增] 终端模拟器 -->
+    <div id="terminal" class="terminal-overlay">
+        <div class="terminal-header">
+            <span>ME2U_TERMINAL_v1.0</span>
+            <span style="cursor:pointer" onclick="document.getElementById('terminal').style.display='none'">[X]</span>
+        </div>
+        <div class="terminal-body" id="term-output">
+            <div>Welcome to ME2U System. Type 'help' for commands.</div>
+        </div>
+        <div class="terminal-input-line">
+            <span class="terminal-prompt">visitor@me2u:~$</span>
+            <input type="text" id="term-input" autocomplete="off">
+        </div>
+    </div>
+
+    <!-- 💻 [新增] 黑客模拟层 -->
+    <div id="hack-layer" class="hack-overlay"></div>
+
+    <!-- 🎹 [新增] 钢琴提示 -->
+    <div id="piano-hint" class="piano-overlay">🎹 Piano Mode: Play with [A-K] keys</div>
+
+
+
+    <script>
+        // 1. 自定义鼠标逻辑
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorOutline = document.querySelector('.cursor-outline');
+        
+        if(window.innerWidth > 768) {
+            window.addEventListener('mousemove', (e) => {
+                const posX = e.clientX;
+                const posY = e.clientY;
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
+                cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
+
+                // 🆕 创建拖尾
+                if(Math.random() > 0.7) { // 减少生成频率，避免性能问题
+                    const trail = document.createElement('div');
+                    trail.className = 'trail-dot';
+                    trail.style.left = `${posX}px`;
+                    trail.style.top = `${posY}px`;
+                    // 随机颜色
+                    const colors = ['var(--c-yellow)', 'var(--c-red)', 'var(--c-blue)', 'var(--c-green)'];
+                    trail.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    document.body.appendChild(trail);
+                    setTimeout(() => trail.remove(), 500);
+                }
+            });
+            document.querySelectorAll('.active-hover').forEach(link => {
+                link.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                link.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+            });
+        }
+
+        // 2. 实时时钟
+        function updateClock() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-GB', { hour12: false, hour: '2-digit', minute: '2-digit' });
+            const clockEl = document.getElementById('clock');
+            if(clockEl) clockEl.innerText = timeString;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 3. 手机端问候
+        const h = new Date().getHours();
+        const gSpan = document.querySelector('#greeting span');
+        const gIcon = document.querySelector('#greeting i');
+        if(gSpan) {
+            if(h < 12) { gSpan.innerText="Morning"; gIcon.className="fa-solid fa-sun"; }
+            else if(h < 18) { gSpan.innerText="Afternoon"; gIcon.className="fa-solid fa-mug-hot"; }
+            else { gSpan.innerText="Good Night"; gIcon.className="fa-solid fa-moon"; }
+        }
+
+        // 4. PC端眼神追踪 (升级版)
+        if(window.innerWidth > 768) {
+            const pupils = document.querySelectorAll('.pupil');
+            const eyes = document.querySelectorAll('.eye');
+            
+            document.addEventListener('mousemove', (e) => {
+                eyes.forEach((eye, index) => {
+                    const pupil = pupils[index];
+                    const shine = pupil.querySelector('.eye-shine'); // 获取高光元素
+                    const rect = eye.getBoundingClientRect();
+                    const eyeCenterX = rect.left + rect.width / 2;
+                    const eyeCenterY = rect.top + rect.height / 2;
+                    
+                    // 计算鼠标相对于眼睛中心的角度
+                    const angle = Math.atan2(e.clientY - eyeCenterY, e.clientX - eyeCenterX);
+                    
+                    // 计算距离，限制最大移动半径，防止跑出眼眶
+                    const distance = Math.min(
+                        Math.hypot(e.clientX - eyeCenterX, e.clientY - eyeCenterY), 
+                        12 // 最大移动半径
+                    );
+                    
+                    const moveX = Math.cos(angle) * distance;
+                    const moveY = Math.sin(angle) * distance;
+                    
+                    pupil.style.transform = `translate(-50%, -50%) translate(${moveX}px, ${moveY}px)`;
+
+                    // 🆕 高光视差效果：让高光向相反方向微动，模拟眼球曲率
+                    if(shine) {
+                        // 限制高光移动范围，避免跑出瞳孔
+                        const shineX = -moveX * 0.4; 
+                        const shineY = -moveY * 0.4;
+                        // 使用 translate3d 开启硬件加速，并保留原有的 CSS 动画效果 (如果 CSS 动画只用了 scale/opacity)
+                        // 注意：如果 CSS 动画用了 transform，这里直接覆盖会导致动画失效。
+                        // 解决方案：我们在 CSS 中只做 scale 动画，这里做 translate。
+                        // 但是 transform 属性是单一的。
+                        // 更好的方案：直接在这里加上 scale(1) 或者不加，因为 CSS 动画可能会被覆盖。
+                        // 实际上，为了简单且效果好，我们可以让 JS 控制位移，CSS 控制 opacity。
+                        // 或者，我们在 JS 里不覆盖 scale。
+                        // 让我们尝试只设置 translate，看看浏览器是否智能合并（通常不会）。
+                        // 所以，我们在 JS 里也加上 scale(1) 占位，或者放弃 CSS 的 scale 动画，只保留 opacity。
+                        // 刚才 CSS 里写了 transform: scale(...)。
+                        // 这里我们用一个 wrapper 或者直接覆盖。
+                        // 简单起见，我们在 JS 里加上 scale(1.1) 的平均值，或者干脆不加 scale，只做位移。
+                        // 呼吸感主要靠 opacity 也就够了。
+                        shine.style.transform = `translate(${shineX}px, ${shineY}px)`;
+                    }
+                });
+            });
+
+            // 随机眨眼逻辑 (让两只眼睛偶尔不同步眨眼，更自然)
+            const eyelids = document.querySelectorAll('.eyelid');
+            function randomBlink() {
+                const eyeIndex = Math.random() > 0.5 ? 0 : 1;
+                // 偶尔单眼眨 (Wink)
+                if(Math.random() > 0.8) {
+                    eyelids[eyeIndex].style.animation = 'none';
+                    void eyelids[eyeIndex].offsetWidth; // trigger reflow
+                    eyelids[eyeIndex].style.animation = 'blinkAnim 0.5s linear';
+                } else {
+                    // 双眼眨
+                    eyelids.forEach(lid => {
+                        lid.style.animation = 'none';
+                        void lid.offsetWidth;
+                        lid.style.animation = 'blinkAnim 0.5s linear';
+                    });
+                }
+                setTimeout(randomBlink, Math.random() * 3000 + 2000);
+            }
+            // 覆盖 CSS 默认的无限循环，改用 JS 控制随机性
+            eyelids.forEach(lid => lid.style.animation = 'none');
+            randomBlink();
+        }
+
+        // 5. 打字机动画脚本
+        const words = ["Design.", "Coding.", "Life Style.", "Creativity."];
+        let i = 0;
+        let timer;
+
+        function typeWriter() {
+            const heading = document.getElementById("typing-text");
+            const word = words[i];
+            let currentText = heading.innerText;
+            
+            // 正在删除
+            if (heading.getAttribute("data-deleting") === "true") {
+                heading.innerText = word.substring(0, currentText.length - 1);
+                if (heading.innerText === "") {
+                    heading.setAttribute("data-deleting", "false");
+                    i = (i + 1) % words.length;
+                    setTimeout(typeWriter, 500);
+                } else {
+                    setTimeout(typeWriter, 100);
+                }
+            } 
+            // 正在输入
+            else {
+                heading.innerText = word.substring(0, currentText.length + 1);
+                if (heading.innerText === word) {
+                    heading.setAttribute("data-deleting", "true");
+                    setTimeout(typeWriter, 2000); // 停顿一下
+                } else {
+                    setTimeout(typeWriter, 150);
+                }
+            }
+        }
+        if(document.getElementById("typing-text")) {
+            typeWriter();
+        }
+
+        // 6. 纸屑彩蛋
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas ? canvas.getContext('2d') : null;
+        let particles = [];
+        if(canvas && window.innerWidth > 768) {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+
+            window.fireConfetti = function() {
+                const logo = document.querySelector('.logo-wrapper').getBoundingClientRect();
+                const startX = logo.left + logo.width / 2;
+                const startY = logo.top + logo.height / 2;
+                for(let i=0; i<80; i++) {
+                    particles.push({
+                        x: startX, y: startY,
+                        vx: (Math.random() - 0.5) * 15, vy: (Math.random() - 1) * 18,
+                        life: 120,
+                        color: ['#FFD93D', '#FF6B6B', '#4D96FF', '#6BCB77'][Math.floor(Math.random()*4)]
+                    });
+                }
+            }
+            function loop() {
+                ctx.clearRect(0,0,canvas.width,canvas.height);
+                particles.forEach((p, index) => {
+                    p.x += p.vx; p.y += p.vy; p.vy += 0.4; p.life--;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, 6, 0, Math.PI*2); ctx.fill();
+                    if(p.life <= 0) particles.splice(index, 1);
+                });
+                requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        // 7. 钢琴音效 (Web Audio API)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        // C大调音阶频率 (C4 - C6)
+        const notes = [
+            261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, // C4-B4
+            523.25, 587.33, 659.25, 698.46, 783.99, 880.00, 987.77, // C5-B5
+            1046.50 // C6
+        ];
+        let noteIndex = 0;
+
+        function playPianoNote() {
+            // 浏览器策略要求用户交互后才能恢复 AudioContext
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            
+            // 使用三角波模拟钢琴的柔和感
+            oscillator.type = 'triangle'; 
+            // 设置频率
+            oscillator.frequency.setValueAtTime(notes[noteIndex], audioCtx.currentTime);
+            
+            // ADSR 包络 (模拟钢琴击弦)
+            // 初始音量为0
+            gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+            // 快速上升到最大音量 (Attack)
+            gainNode.gain.linearRampToValueAtTime(0.6, audioCtx.currentTime + 0.02);
+            // 缓慢衰减 (Decay & Release)
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.5);
+
+            // 连接节点
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            
+            // 开始和停止
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + 1.5);
+
+            // 循环播放音阶
+            noteIndex = (noteIndex + 1) % notes.length;
+        }
+
+        // 监听全局点击事件
+        document.addEventListener('mousedown', playPianoNote);
+        // 也可以给特定元素添加悬停音效 (可选，频率高一点)
+        document.querySelectorAll('a, button, .active-hover').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(notes[noteIndex] * 2, audioCtx.currentTime); // 高八度
+                gain.gain.setValueAtTime(0, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.1, audioCtx.currentTime + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.3);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            });
+        });
+
+        // 8. 主题切换逻辑
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = themeToggle ? themeToggle.querySelector('i') : null;
+        let isDark = false;
+
+        if(themeToggle) {
+            themeToggle.addEventListener('click', () => {
+                isDark = !isDark;
+                if(isDark) {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    if(themeIcon) themeIcon.className = 'fa-solid fa-moon';
+                } else {
+                    document.documentElement.removeAttribute('data-theme');
+                    if(themeIcon) themeIcon.className = 'fa-solid fa-sun';
+                }
+                // 播放音效
+                playPianoNote();
+                // 🎉 切换主题时撒花
+                if(window.fireConfetti) window.fireConfetti();
+            });
+        }
+
+        // 9. 3D Tilt 效果 (Vanilla JS)
+        if(window.innerWidth > 768) {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    
+                    const rotateX = ((y - centerY) / centerY) * -10; // Max 10deg
+                    const rotateY = ((x - centerX) / centerX) * 10;
+
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+                });
+            });
+        }
+
+        // 10. Magnetic Button Effect
+        if(window.innerWidth > 768) {
+            const btn = document.querySelector('.btn-3d');
+            if(btn) {
+                btn.addEventListener('mousemove', (e) => {
+                    const rect = btn.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width / 2;
+                    const y = e.clientY - rect.top - rect.height / 2;
+                    btn.style.transform = `translate(${x * 0.3}px, ${y * 0.5}px)`;
+                });
+                btn.addEventListener('mouseleave', () => {
+                    btn.style.transform = 'translate(0, 0)';
+                });
+                // Add confetti on click
+                btn.addEventListener('click', (e) => {
+                    // e.preventDefault(); // Optional: if you want to see the effect before navigating
+                    if(window.fireConfetti) window.fireConfetti();
+                });
+            }
+        }
+
+        // 11. 滚动进度条
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            const progressBar = document.querySelector('.scroll-progress');
+            const rocket = document.querySelector('.scroll-rocket');
+            
+            if(progressBar) progressBar.style.width = scrolled + "%";
+            if(rocket) rocket.style.left = `calc(${scrolled}% - 20px)`; // Move rocket
+        });
+
+        // 15. [创意] Konami Code 彩蛋 (上上下下左右左右BA)
+        console.log(
+            "%c 🥚 彩蛋提示 / EASTER EGG HINTS 🥚 ",
+            "background: #2d3436; color: #FFD93D; font-size: 20px; padding: 10px; border-radius: 10px; border: 3px solid #FFD93D; font-weight: bold;"
+        );
+        console.log(
+            "%c ⌨️ 键盘输入以下代码触发特效 / Type these codes on your keyboard:",
+            "color: #2d3436; font-size: 14px; font-weight: bold; margin-top: 10px;"
+        );
+        console.table([
+            { Command: 'konami',  Function: '🎉 Party Mode / 派对模式', Detail: 'Type ↑↑↓↓←→←→BA / 输入上上下下左右左右BA' },
+            { Command: 'snake',   Function: '🐍 Snake Game / 贪吃蛇',   Detail: 'Play a retro snake game on a GameBoy / 在GameBoy上玩贪吃蛇' },
+            { Command: 'matrix',  Function: '📟 Matrix Rain / 代码雨',  Detail: 'Toggle Matrix digital rain effect / 切换黑客帝国代码雨特效' },
+            { Command: 'warp',    Function: '🚀 Warp Speed / 曲速引擎', Detail: 'Star Wars style warp speed animation / 星球大战风格曲速穿梭动画' },
+            { Command: 'void',    Function: '🕳️ Black Hole / 黑洞',     Detail: 'Summon a black hole that sucks everything / 召唤黑洞吞噬页面元素' },
+            { Command: 'gravity', Function: '🍎 Gravity / 重力模式',    Detail: 'Elements fall with physics. Drag to throw! / 元素受重力下落，可拖拽投掷！' },
+            { Command: 'pop',     Function: '🫧 Bubble Wrap / 泡泡纸',  Detail: 'Stress relief bubble wrap overlay / 解压泡泡纸模式' },
+            { Command: 'pixel',   Function: '👾 8-Bit / 像素模式',      Detail: 'Retro font and hard shadows / 复古字体与硬阴影风格' },
+            { Command: 'hack',    Function: '💻 Hacker / 黑客模拟',     Detail: 'Simulate a system breach / 模拟黑客入侵系统' },
+            { Command: 'firework',Function: '🎆 Fireworks / 烟花',      Detail: 'Launch fireworks on screen / 在屏幕上燃放烟花' },
+            { Command: 'fish',    Function: '🐟 Aquarium / 水族馆',     Detail: 'Floating fish that avoid your mouse / 漂浮的鱼群，会躲避鼠标' },
+            { Command: 'rain',    Function: '🌧️ Rain / 下雨',           Detail: 'Relaxing rain animation / 惬意的下雨动画' },
+            { Command: 'piano',   Function: '🎹 Piano / 钢琴模式',      Detail: 'Play piano with keys A-K / 使用键盘A-K键弹奏钢琴' },
+            { Command: 'snap',    Function: '🫰 Thanos Snap / 响指',    Detail: 'Half of the elements turn to dust / 随机一半元素化为尘埃' },
+            { Command: 'light',   Function: '🔦 Spotlight / 聚光灯',    Detail: 'Focus on mouse cursor / 鼠标聚光灯效果' },
+            { Command: 'draw',    Function: '🎨 Draw / 绘图模式',       Detail: 'Draw on screen with mouse / 在屏幕上自由涂鸦' },
+            { Command: 'term',    Function: '💻 Terminal / 终端',       Detail: 'Open command line interface / 打开命令行终端' },
+            { Command: 'crt',     Function: '📺 CRT / 老电视',          Detail: 'Retro monitor flicker and scanlines / 复古显示器闪烁与扫描线' },
+            { Command: 'love',    Function: '❤️ Hearts / 爱心雨',       Detail: 'Raining hearts animation / 飘落爱心动画' },
+            { Command: 'spin',    Function: '😵 Barrel Roll / 旋转',    Detail: 'Spin the whole page 360° / 页面旋转360度' },
+            { Command: 'drop',    Function: '📉 Collapse / 崩塌',       Detail: 'Elements fall off the screen / 元素受重力掉落屏幕外' },
+            { Command: 'mirror',  Function: '🪞 Mirror / 镜像',         Detail: 'Flip the page horizontally / 页面水平翻转' },
+            { Command: 'invert',  Function: '🌗 Invert / 反色',         Detail: 'Invert page colors / 页面颜色反转' },
+            { Command: 'debug',   Function: '📐 Debug / 蓝图',          Detail: 'Show element outlines / 显示元素轮廓' },
+            { Command: 'day',     Function: '☀️ Day / 日间模式',        Detail: 'Switch to bright pop-art theme / 切换至明亮波普主题' },
+            { Command: 'night',   Function: '🌙 Night / 夜间模式',      Detail: 'Switch to dark cyber theme / 切换至暗黑赛博主题' }
+        ]);
+        console.log(
+            "%c 💡 提示: 直接在页面上打字即可触发 / Just type anywhere on the page!",
+            "color: #666; font-style: italic; margin-bottom: 10px;"
+        );
+        
+        const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+        
+        // 16. [创意] 单词彩蛋 (Typing Cheats)
+        let inputBuffer = '';
+        let matrixInterval;
+        const cheats = {
+            'spin': () => {
+                document.body.style.transition = 'transform 1s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+                document.body.style.transform = 'rotate(360deg) scale(0.8)';
+                setTimeout(() => {
+                    document.body.style.transform = 'none';
+                    setTimeout(() => document.body.style.transition = '', 1000); // Clear transition
+                }, 1000);
+            },
+            'love': () => {
+                for(let i=0; i<30; i++) {
+                    setTimeout(() => {
+                        const heart = document.createElement('i');
+                        heart.className = 'fa-solid fa-heart sticker';
+                        heart.style.color = ['#FF6B6B', '#FFD93D', '#FF9F43'][Math.floor(Math.random()*3)];
+                        heart.style.left = Math.random() * window.innerWidth + 'px';
+                        heart.style.top = Math.random() * window.innerHeight + 'px';
+                        heart.style.fontSize = (Math.random() * 3 + 1) + 'rem';
+                        heart.style.zIndex = 10000;
+                        document.body.appendChild(heart);
+                        setTimeout(() => heart.remove(), 1500);
+                    }, i * 50);
+                }
+            },
+            'matrix': () => {
+                const body = document.body;
+                const canvas = document.getElementById('matrix-canvas');
+                if(body.classList.contains('matrix-mode')) {
+                    body.classList.remove('matrix-mode');
+                    clearInterval(matrixInterval);
+                } else {
+                    body.classList.add('matrix-mode');
+                    startMatrix(canvas);
+                }
+            },
+            'day': () => {
+                document.documentElement.removeAttribute('data-theme');
+                isDark = false;
+                if(themeIcon) themeIcon.className = 'fa-solid fa-sun';
+            },
+            'night': () => {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                isDark = true;
+                if(themeIcon) themeIcon.className = 'fa-solid fa-moon';
+            },
+            'drop': () => {
+                document.querySelectorAll('.card, .about-box, .logo-wrapper, .social-dock, .widget-clock, .widget-music, .widget-theme').forEach(el => {
+                    el.classList.add('gravity-fall');
+                });
+                setTimeout(() => {
+                    showToast("Oops! Gravity failure. Reloading...", 'triangle-exclamation');
+                    setTimeout(() => location.reload(), 2000);
+                }, 2000);
+            },
+            'invert': () => {
+                document.documentElement.classList.toggle('invert-mode');
+                showToast("🌗 Invert Mode Toggled", 'circle-half-stroke');
+            },
+            'warp': () => {
+                const warp = document.getElementById('warp-layer');
+                if(warp) {
+                    warp.style.display = 'block';
+                    warp.innerHTML = '';
+                    for(let i=0; i<100; i++) {
+                        const star = document.createElement('div');
+                        star.className = 'warp-star';
+                        star.style.left = Math.random() * 100 + '%';
+                        star.style.top = Math.random() * 100 + '%';
+                        star.style.animation = `warp-move ${Math.random() * 0.5 + 0.5}s linear infinite`;
+                        warp.appendChild(star);
+                    }
+                    showToast("🚀 Warp Speed Activated!", 'rocket');
+                    setTimeout(() => {
+                        warp.style.display = 'none';
+                        warp.innerHTML = '';
+                    }, 3000);
+                }
+            },
+            'snap': () => {
+                const targets = document.querySelectorAll('.card, .skill-tag, .social-btn, .logo-text span, .about-box, .widget-clock');
+                let count = 0;
+                targets.forEach(el => {
+                    if(Math.random() > 0.5) {
+                        el.classList.add('snap-dust');
+                        setTimeout(() => el.classList.add('snapped'), Math.random() * 1000);
+                        count++;
+                    }
+                });
+                showToast(`🫰 Snapped! ${count} elements turned to dust.`, 'hand-sparkles');
+                setTimeout(() => {
+                    showToast("⏪ Time Stone used... Reverting.", 'clock-rotate-left');
+                    targets.forEach(el => {
+                        el.classList.remove('snapped');
+                        setTimeout(() => el.classList.remove('snap-dust'), 1000);
+                    });
+                }, 4000);
+            },
+            'debug': () => {
+                document.body.classList.toggle('debug-mode');
+                showToast("📐 Debug Mode Toggled", 'bug');
+            },
+            'void': () => {
+                // Create Black Hole
+                const bh = document.createElement('div');
+                bh.className = 'black-hole-container';
+                document.body.appendChild(bh);
+                
+                showToast("🕳️ EVENT HORIZON REACHED...", "circle-dot");
+                
+                // Activate BH
+                setTimeout(() => bh.classList.add('active'), 100);
+                
+                // Suck everything in
+                setTimeout(() => {
+                    const center = { x: window.innerWidth/2, y: window.innerHeight/2 };
+                    document.querySelectorAll('body > *:not(.black-hole-container)').forEach(el => {
+                        if(el.style.display === 'none') return;
+                        const rect = el.getBoundingClientRect();
+                        const elCenter = { x: rect.left + rect.width/2, y: rect.top + rect.height/2 };
+                        // Calculate vector to center
+                        const tx = center.x - elCenter.x;
+                        const ty = center.y - elCenter.y;
+                        
+                        el.style.setProperty('--tx', `${tx}px`);
+                        el.style.setProperty('--ty', `${ty}px`);
+                        el.classList.add('sucked-into-void');
+                    });
+                }, 2000);
+                
+                // Reset
+                setTimeout(() => {
+                    location.reload();
+                }, 6000);
+            },
+            'pop': () => {
+                const overlay = document.createElement('div');
+                overlay.className = 'bubble-wrap-overlay';
+                overlay.title = "Click to POP! (Click outside to exit)";
+                
+                // Calculate how many bubbles fit
+                const cols = Math.floor(window.innerWidth / 55);
+                const rows = Math.floor(window.innerHeight / 55);
+                const total = cols * rows;
+                
+                for(let i=0; i<total; i++) {
+                    const b = document.createElement('div');
+                    b.className = 'bubble';
+                    b.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if(!b.classList.contains('popped')) {
+                            b.classList.add('popped');
+                            // Pop sound
+                            const audio = new (window.AudioContext || window.webkitAudioContext)();
+                            const osc = audio.createOscillator();
+                            const gain = audio.createGain();
+                            osc.frequency.setValueAtTime(300 + Math.random()*200, audio.currentTime);
+                            osc.frequency.exponentialRampToValueAtTime(0.01, audio.currentTime + 0.1);
+                            gain.gain.setValueAtTime(0.5, audio.currentTime);
+                            gain.gain.exponentialRampToValueAtTime(0.01, audio.currentTime + 0.1);
+                            osc.connect(gain);
+                            gain.connect(audio.destination);
+                            osc.start();
+                            osc.stop(audio.currentTime + 0.1);
+                        }
+                    });
+                    overlay.appendChild(b);
+                }
+                
+                // Close on background click
+                overlay.addEventListener('click', (e) => {
+                    if(e.target === overlay) overlay.remove();
+                });
+                
+                document.body.appendChild(overlay);
+                showToast("🫧 Stress Relief Mode ON", "soap");
+            },
+            'gravity': () => {
+                if(window.gravityInterval) {
+                    clearInterval(window.gravityInterval);
+                    window.gravityInterval = null;
+                    location.reload(); // Easiest way to reset layout
+                    return;
+                }
+                
+                showToast("🍎 Newton's Nightmare! (Drag to throw)", "apple-whole");
+                
+                const elements = document.querySelectorAll('.card, .about-box, .skill-tag, .social-btn, .logo-wrapper, .widget-clock, .widget-music, .widget-theme, .mystery-box, .ufo-container');
+                const bodies = [];
+                
+                elements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    // Set fixed position based on current rect
+                    el.style.left = rect.left + 'px';
+                    el.style.top = rect.top + 'px';
+                    el.style.width = rect.width + 'px'; 
+                    el.classList.add('gravity-active');
+                    
+                    const body = {
+                        el: el,
+                        x: rect.left,
+                        y: rect.top,
+                        vx: (Math.random() - 0.5) * 15,
+                        vy: (Math.random() - 0.5) * 15,
+                        width: rect.width,
+                        height: rect.height,
+                        isDragging: false
+                    };
+                    bodies.push(body);
+                    
+                    // Drag logic
+                    el.addEventListener('mousedown', (e) => {
+                        e.preventDefault(); // Prevent text selection
+                        body.isDragging = true;
+                        body.vx = 0; body.vy = 0;
+                    });
+                });
+                
+                document.addEventListener('mouseup', () => {
+                    bodies.forEach(b => b.isDragging = false);
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    bodies.forEach(b => {
+                        if(b.isDragging) {
+                            b.vx = e.movementX; // Throw velocity
+                            b.vy = e.movementY;
+                            b.x = e.clientX - b.width/2;
+                            b.y = e.clientY - b.height/2;
+                        }
+                    });
+                });
+
+                window.gravityInterval = setInterval(() => {
+                    bodies.forEach(b => {
+                        if(!b.isDragging) {
+                            b.vy += 0.8; // Gravity
+                            b.x += b.vx;
+                            b.y += b.vy;
+                            
+                            // Floor bounce
+                            if(b.y + b.height > window.innerHeight) {
+                                b.y = window.innerHeight - b.height;
+                                b.vy *= -0.7; // Damping
+                                b.vx *= 0.95; // Friction
+                            }
+                            // Ceiling
+                            if(b.y < 0) {
+                                b.y = 0;
+                                b.vy *= -0.7;
+                            }
+                            // Walls
+                            if(b.x + b.width > window.innerWidth) {
+                                b.x = window.innerWidth - b.width;
+                                b.vx *= -0.7;
+                            }
+                            if(b.x < 0) {
+                                b.x = 0;
+                                b.vx *= -0.7;
+                            }
+                        }
+                        
+                        b.el.style.left = b.x + 'px';
+                        b.el.style.top = b.y + 'px';
+                    });
+                }, 16);
+            },
+            'pixel': () => {
+                document.body.classList.toggle('pixel-mode');
+                showToast("👾 8-Bit Retro Mode Toggled", "gamepad");
+            },
+            'hack': () => {
+                const layer = document.getElementById('hack-layer');
+                if(!layer) return;
+                layer.style.display = 'block';
+                layer.innerHTML = '';
+                
+                const lines = [
+                    "Initializing brute force attack...",
+                    "Bypassing firewall (Port 8080)...",
+                    "Injecting SQL payload...",
+                    "Accessing mainframe...",
+                    "Decrypting user data...",
+                    "Downloading sensitive files...",
+                    "Covering tracks...",
+                    "System compromised."
+                ];
+                
+                let i = 0;
+                const interval = setInterval(() => {
+                    // Random hex dump
+                    let hex = '';
+                    for(let j=0; j<5; j++) hex += Math.random().toString(16).substr(2, 8) + ' ';
+                    
+                    const div = document.createElement('div');
+                    div.innerText = `[${new Date().toLocaleTimeString()}] ${hex} > ${lines[i % lines.length]}`;
+                    layer.appendChild(div);
+                    layer.scrollTop = layer.scrollHeight;
+                    
+                    // Randomly change text color
+                    if(Math.random() > 0.9) div.style.color = '#ff0000';
+                    
+                    i++;
+                    if(i > 100) {
+                        clearInterval(interval);
+                        const access = document.createElement('div');
+                        access.innerHTML = `<br><h1 style="color:#0f0; text-align:center; font-size:5rem; border:5px solid #0f0;">ACCESS GRANTED</h1>`;
+                        layer.appendChild(access);
+                        setTimeout(() => {
+                            layer.style.display = 'none';
+                            showToast("😎 I'm in.", "user-secret");
+                        }, 2000);
+                    }
+                }, 50);
+            },
+            'firework': () => {
+                showToast("🎆 Fireworks Show!", "explosion");
+                const canvas = document.getElementById('confetti-canvas');
+                const ctx = canvas.getContext('2d');
+                
+                // Simple Firework Class
+                class Firework {
+                    constructor() {
+                        this.x = Math.random() * canvas.width;
+                        this.y = canvas.height;
+                        this.targetY = Math.random() * (canvas.height / 2);
+                        this.speed = 10 + Math.random() * 5;
+                        this.angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.5;
+                        this.vx = Math.cos(this.angle) * this.speed;
+                        this.vy = Math.sin(this.angle) * this.speed;
+                        this.hue = Math.random() * 360;
+                        this.exploded = false;
+                        this.particles = [];
+                    }
+                    update() {
+                        if(!this.exploded) {
+                            this.x += this.vx;
+                            this.y += this.vy;
+                            this.vy += 0.2; // Gravity
+                            if(this.vy >= 0 || this.y <= this.targetY) {
+                                this.explode();
+                            }
+                        } else {
+                            this.particles.forEach((p, i) => {
+                                p.x += p.vx;
+                                p.y += p.vy;
+                                p.vy += 0.1;
+                                p.alpha -= 0.02;
+                                if(p.alpha <= 0) this.particles.splice(i, 1);
+                            });
+                        }
+                    }
+                    explode() {
+                        this.exploded = true;
+                        // Play sound
+                        const audio = new (window.AudioContext || window.webkitAudioContext)();
+                        const osc = audio.createOscillator();
+                        const gain = audio.createGain();
+                        osc.frequency.setValueAtTime(200, audio.currentTime);
+                        osc.frequency.exponentialRampToValueAtTime(0.01, audio.currentTime + 0.5);
+                        gain.gain.setValueAtTime(0.5, audio.currentTime);
+                        gain.gain.exponentialRampToValueAtTime(0.01, audio.currentTime + 0.5);
+                        osc.connect(gain);
+                        gain.connect(audio.destination);
+                        osc.start();
+                        osc.stop(audio.currentTime + 0.5);
+
+                        for(let i=0; i<50; i++) {
+                            const angle = Math.random() * Math.PI * 2;
+                            const speed = Math.random() * 5;
+                            this.particles.push({
+                                x: this.x, y: this.y,
+                                vx: Math.cos(angle) * speed,
+                                vy: Math.sin(angle) * speed,
+                                alpha: 1,
+                                color: `hsl(${this.hue}, 100%, 50%)`
+                            });
+                        }
+                    }
+                    draw() {
+                        if(!this.exploded) {
+                            ctx.fillStyle = `hsl(${this.hue}, 100%, 50%)`;
+                            ctx.beginPath(); ctx.arc(this.x, this.y, 3, 0, Math.PI*2); ctx.fill();
+                        } else {
+                            this.particles.forEach(p => {
+                                ctx.globalAlpha = p.alpha;
+                                ctx.fillStyle = p.color;
+                                ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, Math.PI*2); ctx.fill();
+                                ctx.globalAlpha = 1;
+                            });
+                        }
+                    }
+                }
+
+                const fireworks = [];
+                let count = 0;
+                const fwInterval = setInterval(() => {
+                    fireworks.push(new Firework());
+                    count++;
+                    if(count > 10) clearInterval(fwInterval);
+                }, 500);
+
+                function animateFW() {
+                    if(fireworks.length === 0 && count > 10) return;
+                    // Don't clear rect here, let confetti loop handle it or use a semi-transparent fill for trails
+                    // But we share canvas with confetti, so we just draw on top
+                    fireworks.forEach((fw, i) => {
+                        fw.update();
+                        fw.draw();
+                        if(fw.exploded && fw.particles.length === 0) fireworks.splice(i, 1);
+                    });
+                    requestAnimationFrame(animateFW);
+                }
+                animateFW();
+            },
+            'fish': () => {
+                showToast("🐟 Aquarium Mode ON", "fish");
+                const fishEmojis = ['🐟', '🐠', '🐡', '🦈', '🐙'];
+                for(let i=0; i<10; i++) {
+                    const fish = document.createElement('div');
+                    fish.className = 'fish';
+                    fish.innerText = fishEmojis[Math.floor(Math.random() * fishEmojis.length)];
+                    fish.style.top = Math.random() * window.innerHeight + 'px';
+                    fish.style.left = Math.random() * window.innerWidth + 'px';
+                    document.body.appendChild(fish);
+                    
+                    let vx = (Math.random() - 0.5) * 4;
+                    let vy = (Math.random() - 0.5) * 2;
+                    
+                    setInterval(() => {
+                        const rect = fish.getBoundingClientRect();
+                        let x = rect.left + vx;
+                        let y = rect.top + vy;
+                        
+                        // Bounce
+                        if(x < -50 || x > window.innerWidth + 50) {
+                            vx *= -1;
+                            fish.style.transform = `scaleX(${vx > 0 ? -1 : 1})`; // Flip
+                        }
+                        if(y < -50 || y > window.innerHeight + 50) vy *= -1;
+                        
+                        // Mouse avoidance
+                        if(window.mouseX) {
+                            const dx = x - window.mouseX;
+                            const dy = y - window.mouseY;
+                            const dist = Math.sqrt(dx*dx + dy*dy);
+                            if(dist < 150) {
+                                vx += dx / dist * 0.5;
+                                vy += dy / dist * 0.5;
+                            }
+                        }
+                        
+                        // Limit speed
+                        const speed = Math.sqrt(vx*vx + vy*vy);
+                        if(speed > 5) { vx *= 0.9; vy *= 0.9; }
+                        
+                        fish.style.left = x + 'px';
+                        fish.style.top = y + 'px';
+                    }, 20);
+                }
+            },
+            'rain': () => {
+                showToast("🌧️ It's raining...", "cloud-rain");
+                const canvas = document.getElementById('confetti-canvas');
+                const ctx = canvas.getContext('2d');
+                const drops = [];
+                for(let i=0; i<100; i++) {
+                    drops.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        l: Math.random() * 20 + 10,
+                        v: Math.random() * 10 + 10
+                    });
+                }
+                
+                function drawRain() {
+                    // Use a semi-transparent clear to create trails? No, rain is sharp.
+                    // But we share canvas with confetti.
+                    // Let's just draw rain on top.
+                    // Note: Confetti loop clears canvas. We need to hook into it or use a separate interval.
+                    // Since confetti loop is always running if active, we might conflict.
+                    // Let's just use a separate interval that draws on top, assuming confetti loop clears it.
+                    // Actually, confetti loop clears the WHOLE canvas.
+                    // So we should add rain to the confetti loop or start a new loop that clears and draws both?
+                    // Simplest: Just run a loop that draws rain. If confetti is running, they might flicker.
+                    // Better: Add a 'rainMode' flag to the main loop.
+                    // For now, let's just run a loop and see.
+                    
+                    ctx.strokeStyle = 'rgba(174, 194, 224, 0.5)';
+                    ctx.lineWidth = 1;
+                    ctx.lineCap = 'round';
+                    
+                    drops.forEach(d => {
+                        d.y += d.v;
+                        if(d.y > canvas.height) {
+                            d.y = -20;
+                            d.x = Math.random() * canvas.width;
+                        }
+                        ctx.beginPath();
+                        ctx.moveTo(d.x, d.y);
+                        ctx.lineTo(d.x, d.y + d.l);
+                        ctx.stroke();
+                    });
+                    
+                    if(Math.random() > 0.99) {
+                        // Lightning
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                        setTimeout(() => {}, 50);
+                    }
+                    requestAnimationFrame(drawRain);
+                }
+                drawRain();
+            },
+            'piano': () => {
+                const hint = document.getElementById('piano-hint');
+                if(hint.style.display === 'block') {
+                    hint.style.display = 'none';
+                    window.pianoMode = false;
+                    showToast("🎹 Piano Mode OFF", "music");
+                } else {
+                    hint.style.display = 'block';
+                    window.pianoMode = true;
+                    showToast("🎹 Piano Mode ON (Use A-K keys)", "music");
+                }
+            }
+        };
+
+        // Piano Key Listener
+        const pianoKeys = {
+            'a': 261.63, 's': 293.66, 'd': 329.63, 'f': 349.23, 
+            'g': 392.00, 'h': 440.00, 'j': 493.88, 'k': 523.25
+        };
+        document.addEventListener('keydown', (e) => {
+            if(window.pianoMode && pianoKeys[e.key]) {
+                const audio = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audio.createOscillator();
+                const gain = audio.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(pianoKeys[e.key], audio.currentTime);
+                gain.gain.setValueAtTime(0, audio.currentTime);
+                gain.gain.linearRampToValueAtTime(0.5, audio.currentTime + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.01, audio.currentTime + 1);
+                osc.connect(gain);
+                gain.connect(audio.destination);
+                osc.start();
+                osc.stop(audio.currentTime + 1);
+                
+                // Visual feedback
+                const note = document.createElement('div');
+                note.innerText = "🎵";
+                note.style.position = 'fixed';
+                note.style.left = Math.random() * window.innerWidth + 'px';
+                note.style.bottom = '100px';
+                note.style.fontSize = '2rem';
+                note.style.animation = 'floatShape 2s forwards';
+                document.body.appendChild(note);
+                setTimeout(() => note.remove(), 2000);
+            }
+        });
+
+        function startMatrix(canvas) {
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const fontSize = 16;
+            const columns = canvas.width/fontSize;
+            const drops = [];
+            for(let x=0; x<columns; x++) drops[x] = 1;
+
+            function draw() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#0F0';
+                ctx.font = fontSize + 'px monospace';
+                for(let i=0; i<drops.length; i++) {
+                    const text = katakana.charAt(Math.floor(Math.random()*katakana.length));
+                    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+                    if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                    drops[i]++;
+                }
+            }
+            matrixInterval = setInterval(draw, 30);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            // Konami Logic
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    activatePartyMode();
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+
+            // Cheat Code Logic
+            inputBuffer += e.key.toLowerCase();
+            if(inputBuffer.length > 20) inputBuffer = inputBuffer.slice(-20);
+            
+            Object.keys(cheats).forEach(code => {
+                if(inputBuffer.endsWith(code)) {
+                    cheats[code]();
+                    inputBuffer = ''; 
+                }
+            });
+        });
+
+        // 17. [交互] 心情追踪器逻辑
+        document.querySelectorAll('.mood-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const mood = this.getAttribute('data-mood');
+                
+                // 简单的变色反馈
+                const root = document.documentElement;
+                if(mood === 'happy') root.style.setProperty('--c-bg-pc', '#fffcf0');
+                if(mood === 'focus') root.style.setProperty('--c-bg-pc', '#e3f2fd'); // Blue tint
+                if(mood === 'chill') root.style.setProperty('--c-bg-pc', '#e8f5e9'); // Green tint
+                if(mood === 'sleepy') root.style.setProperty('--c-bg-pc', '#f3e5f5'); // Purple tint
+                
+                // 播放音效
+                if(window.playPianoNote) window.playPianoNote();
+            });
+        });
+
+        function activatePartyMode() {
+            showToast("🎉 KONAMI CODE ACTIVATED! PARTY TIME! 🎉", 'star');
+            document.body.style.animation = "spinSlow 5s infinite linear";
+            // 疯狂撒花
+            setInterval(() => {
+                if(window.fireConfetti) window.fireConfetti();
+            }, 500);
+            // 播放音效
+            if(window.playPianoNote) {
+                setInterval(window.playPianoNote, 200);
+            }
+        }
+
+        // 12. About Text Animation
+        const aboutText = document.getElementById('about-text');
+        if(aboutText) {
+            const text = aboutText.innerText;
+            const words = text.split(' ');
+            aboutText.innerHTML = '';
+            words.forEach((word, index) => {
+                const span = document.createElement('span');
+                span.innerText = word + ' ';
+                span.className = 'word-span';
+                span.style.animationDelay = `${index * 0.05}s`; // Stagger delay
+                aboutText.appendChild(span);
+            });
+        }
+
+        // 13. [创意] 点击生成贴纸 (Click to Stamp)
+        const stickerIcons = ['fa-star', 'fa-heart', 'fa-bolt', 'fa-face-smile', 'fa-ghost', 'fa-gem', 'fa-crown', 'fa-rocket', 'fa-lemon', 'fa-poo'];
+        const stickerColors = ['var(--c-yellow)', 'var(--c-red)', 'var(--c-blue)', 'var(--c-green)', 'var(--c-purple)'];
+        
+        document.addEventListener('click', (e) => {
+            // 避免点击交互元素时触发 (卡片、按钮、Logo等)
+            if(e.target.closest('a, button, .card, .logo-wrapper, .widget-theme, .social-btn')) return;
+
+            const sticker = document.createElement('i');
+            const iconClass = stickerIcons[Math.floor(Math.random() * stickerIcons.length)];
+            const color = stickerColors[Math.floor(Math.random() * stickerColors.length)];
+            
+            sticker.className = `fa-solid ${iconClass} sticker`;
+            sticker.style.left = `${e.pageX - 20}px`; // Center the sticker
+            sticker.style.top = `${e.pageY - 20}px`;
+            sticker.style.color = color;
+            
+            // 设置随机旋转角度 CSS 变量
+            const finalRotation = Math.random() * 60 - 30;
+            sticker.style.setProperty('--rot', `${finalRotation}deg`);
+            
+            document.body.appendChild(sticker);
+            
+            // 播放音效
+            if(window.playPianoNote) window.playPianoNote();
+
+            // 限制贴纸数量，避免过多
+            const stickers = document.querySelectorAll('.sticker');
+            if(stickers.length > 15) {
+                stickers[0].remove();
+            }
+        });
+
+        // 14. [美化] 背景视差效果 (Parallax)
+        if(window.innerWidth > 768) {
+            const bgText = document.querySelector('.bg-big-text');
+            const stickers = document.querySelectorAll('.corner-sticker');
+            
+            document.addEventListener('mousemove', (e) => {
+                const x = (window.innerWidth - e.pageX * 2) / 100;
+                const y = (window.innerHeight - e.pageY * 2) / 100;
+
+                if(bgText) {
+                    // 保持原有的 rotate(-10deg) 并叠加位移
+                    bgText.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px)) rotate(-10deg)`;
+                }
+                
+                stickers.forEach((s, i) => {
+                    const factor = (i + 1) * 0.5;
+                    // 保持原有的 rotate
+                    const baseRot = i === 0 ? -15 : 10; 
+                    s.style.transform = `translate(${x * factor}px, ${y * factor}px) rotate(${baseRot}deg)`;
+                });
+            });
+        }
+        // 18. [创意] 神秘宝箱逻辑
+        function openMysteryBox() {
+            const box = document.querySelector('.mystery-box');
+            if(box) {
+                box.classList.add('wobble-effect');
+                setTimeout(() => box.classList.remove('wobble-effect'), 500);
+            }
+
+            const prizes = [
+                "🎉 You found a hidden pixel!",
+                "🚀 Warp drive activated!",
+                "🍕 Free virtual pizza!",
+                "👾 A wild bug appeared!",
+                "💎 1000 imaginary coins!"
+            ];
+            const prize = prizes[Math.floor(Math.random() * prizes.length)];
+            showToast(prize, 'gift');
+            if(window.fireConfetti) window.fireConfetti();
+        }
+
+        // 19. [创意] 像素猫巡逻
+        const cat = document.getElementById('pixel-cat');
+        function startCatPatrol() {
+            if(!cat) return;
+            cat.classList.add('walking');
+            cat.style.left = '110%';
+            cat.style.transform = 'scaleX(1)'; 
+            
+            setTimeout(() => {
+                cat.style.transition = 'none';
+                cat.style.left = '-50px';
+                cat.style.transform = 'scaleX(-1)'; 
+                
+                setTimeout(() => {
+                    cat.style.transition = 'left 10s linear, transform 0.2s';
+                    startCatPatrol();
+                }, 1000);
+            }, 10000);
+        }
+        setTimeout(startCatPatrol, 2000);
+
+        // 20. [彩蛋] 聚光灯
+        const spotlight = document.getElementById('spotlight');
+        document.addEventListener('mousemove', (e) => {
+            if(spotlight && spotlight.classList.contains('active')) {
+                spotlight.style.setProperty('--x', e.clientX + 'px');
+                spotlight.style.setProperty('--y', e.clientY + 'px');
+            }
+        });
+
+        // 21. [创意] 自定义右键菜单
+        const ctxMenu = document.getElementById('context-menu');
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            if(ctxMenu) {
+                ctxMenu.style.display = 'block';
+                ctxMenu.style.left = e.pageX + 'px';
+                ctxMenu.style.top = e.pageY + 'px';
+            }
+        });
+        document.addEventListener('click', () => {
+            if(ctxMenu) ctxMenu.style.display = 'none';
+        });
+
+        // 22. [动画] 标题滚动
+        let titleText = document.title + "  ";
+        setInterval(() => {
+            titleText = titleText.substring(1) + titleText.substring(0, 1);
+            document.title = titleText;
+        }, 500);
+
+        // Add to cheats
+        cheats['light'] = () => {
+            if(spotlight) {
+                spotlight.classList.toggle('active');
+                console.log("🔦 Spotlight toggled!");
+            }
+        };
+
+        // 23. [创意] 磁性按钮效果
+        const magneticBtns = document.querySelectorAll('.skill-tag, .social-btn, .card');
+        magneticBtns.forEach(btn => {
+            btn.classList.add('magnetic-btn');
+            btn.addEventListener('mousemove', (e) => {
+                const rect = btn.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width / 2;
+                const y = e.clientY - rect.top - rect.height / 2;
+                btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'translate(0, 0)';
+            });
+        });
+
+        // 24. [动画] 滚动显现 (Scroll Reveal)
+        const revealElements = document.querySelectorAll('.card, .about-box, .skills-container, .timeline-item');
+        revealElements.forEach(el => el.classList.add('reveal'));
+        
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        revealElements.forEach(el => revealObserver.observe(el));
+
+        // 25. [创意] 终端逻辑
+        const term = document.getElementById('terminal');
+        const termInput = document.getElementById('term-input');
+        const termOutput = document.getElementById('term-output');
+        
+        cheats['term'] = () => {
+            if(term) {
+                term.style.display = 'flex';
+                if(termInput) termInput.focus();
+            }
+        };
+        cheats['crt'] = () => {
+            const crt = document.getElementById('crt-layer');
+            if(crt) {
+                crt.classList.toggle('active');
+                console.log("📺 CRT Mode Toggled");
+            }
+        };
+
+        if(termInput) {
+            termInput.addEventListener('keydown', (e) => {
+                if(e.key === 'Enter') {
+                    const cmd = termInput.value.trim().toLowerCase();
+                    const line = document.createElement('div');
+                    line.innerHTML = `<span style="color:#aaa">visitor@me2u:~$</span> ${cmd}`;
+                    termOutput.appendChild(line);
+                    
+                    let response = "";
+                    switch(cmd) {
+                        case 'help':
+                            response = "Available commands: help, clear, date, whoami, skills, contact, exit";
+                            break;
+                        case 'clear':
+                            termOutput.innerHTML = '';
+                            break;
+                        case 'date':
+                            response = new Date().toString();
+                            break;
+                        case 'whoami':
+                            response = "You are a curious visitor exploring the digital void.";
+                            break;
+                        case 'skills':
+                            response = "Vue.js, .NET Core, SQL Server, Docker, Redis, Linux";
+                            break;
+                        case 'contact':
+                            response = "Email: me@example.com | GitHub: @me2u";
+                            break;
+                        case 'exit':
+                            term.style.display = 'none';
+                            break;
+                        case 'sudo':
+                            response = "Nice try. You have no power here.";
+                            break;
+                        default:
+                            if(cmd) response = `Command not found: ${cmd}`;
+                    }
+                    
+                    if(response) {
+                        const respLine = document.createElement('div');
+                        respLine.style.color = "#fff";
+                        respLine.innerText = response;
+                        termOutput.appendChild(respLine);
+                    }
+                    
+                    termInput.value = '';
+                    termOutput.scrollTop = termOutput.scrollHeight;
+                }
+            });
+        }
+
+        // 26. [创意] 魔法尘埃光标
+        let mouseX = 0, mouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            if(Math.random() > 0.8) { // Limit creation rate
+                const dust = document.createElement('div');
+                dust.className = 'magic-dust';
+                dust.style.left = mouseX + 'px';
+                dust.style.top = mouseY + 'px';
+                dust.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                document.body.appendChild(dust);
+                setTimeout(() => dust.remove(), 1000);
+            }
+        });
+
+        // 27. [创意] 绘图模式
+        const drawCanvas = document.getElementById('draw-canvas');
+        if(drawCanvas) {
+            const ctx = drawCanvas.getContext('2d');
+            let isDrawing = false;
+            
+            function resizeCanvas() {
+                drawCanvas.width = window.innerWidth;
+                drawCanvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            drawCanvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                ctx.beginPath();
+                ctx.moveTo(e.clientX, e.clientY);
+                ctx.strokeStyle = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                ctx.lineWidth = 5;
+                ctx.lineCap = 'round';
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = ctx.strokeStyle;
+            });
+            
+            drawCanvas.addEventListener('mousemove', (e) => {
+                if(!isDrawing) return;
+                ctx.lineTo(e.clientX, e.clientY);
+                ctx.stroke();
+            });
+            
+            drawCanvas.addEventListener('mouseup', () => isDrawing = false);
+            drawCanvas.addEventListener('mouseleave', () => isDrawing = false);
+            
+            cheats['draw'] = () => {
+                drawCanvas.classList.toggle('active');
+                if(drawCanvas.classList.contains('active')) {
+                    showToast("🎨 Draw Mode ON! Click and drag to paint.", 'paintbrush');
+                } else {
+                    showToast("🎨 Draw Mode OFF", 'eraser');
+                    ctx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+                }
+            };
+        }
+
+        // 29. [创意] 故障文字触发 - 已移除，由 CSS 动画接管
+        // const logoText = document.querySelector('.logo-text');
+        // if(logoText) { ... }
+
+        // 30. [彩蛋] 贪吃蛇游戏逻辑
+        const gameBoy = document.getElementById('gameboy');
+        const snakeCanvas = document.getElementById('snake-canvas');
+        let snakeCtx, snakeGameInterval;
+        let snake = [{x: 10, y: 10}];
+        let food = {x: 15, y: 15};
+        let dx = 0, dy = 0;
+        let score = 0;
+        const gridSize = 10;
+        const tileCount = 20;
+
+        function initSnakeGame() {
+            if(!snakeCanvas) return;
+            snakeCtx = snakeCanvas.getContext('2d');
+            document.addEventListener('keydown', handleSnakeKey);
+            resetSnakeGame();
+        }
+
+        function resetSnakeGame() {
+            snake = [{x: 10, y: 10}];
+            food = {x: Math.floor(Math.random()*tileCount), y: Math.floor(Math.random()*tileCount)};
+            dx = 0; dy = 0;
+            score = 0;
+            if(snakeGameInterval) clearInterval(snakeGameInterval);
+            snakeGameInterval = setInterval(drawSnakeGame, 100);
+        }
+
+        function toggleSnakeGame() {
+            if(gameBoy.style.display === 'flex') {
+                gameBoy.style.display = 'none';
+                clearInterval(snakeGameInterval);
+                document.removeEventListener('keydown', handleSnakeKey);
+            } else {
+                gameBoy.style.display = 'flex';
+                initSnakeGame();
+            }
+        }
+
+        function drawSnakeGame() {
+            // Clear screen
+            snakeCtx.fillStyle = '#9bbc0f';
+            snakeCtx.fillRect(0, 0, snakeCanvas.width, snakeCanvas.height);
+
+            // Move snake
+            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+            
+            // Wrap around
+            if(head.x < 0) head.x = tileCount - 1;
+            if(head.x >= tileCount) head.x = 0;
+            if(head.y < 0) head.y = tileCount - 1;
+            if(head.y >= tileCount) head.y = 0;
+
+            snake.unshift(head);
+
+            // Check food
+            if(head.x === food.x && head.y === food.y) {
+                score++;
+                food = {x: Math.floor(Math.random()*tileCount), y: Math.floor(Math.random()*tileCount)};
+                // Play sound
+                if(window.playPianoNote) window.playPianoNote();
+            } else {
+                snake.pop();
+            }
+
+            // Draw food
+            snakeCtx.fillStyle = '#0f380f';
+            snakeCtx.fillRect(food.x * gridSize, food.y * gridSize, gridSize-2, gridSize-2);
+
+            // Draw snake
+            snakeCtx.fillStyle = '#306230';
+            snake.forEach(part => {
+                snakeCtx.fillRect(part.x * gridSize, part.y * gridSize, gridSize-2, gridSize-2);
+            });
+
+            // Draw score
+            snakeCtx.fillStyle = '#0f380f';
+            snakeCtx.font = '10px Courier New';
+            snakeCtx.fillText("SCORE: " + score, 5, 190);
+        }
+
+        function handleSnakeKey(e) {
+            switch(e.key) {
+                case 'ArrowUp': if(dy!==1) { dx=0; dy=-1; } break;
+                case 'ArrowDown': if(dy!==-1) { dx=0; dy=1; } break;
+                case 'ArrowLeft': if(dx!==1) { dx=-1; dy=0; } break;
+                case 'ArrowRight': if(dx!==-1) { dx=1; dy=0; } break;
+            }
+        }
+        
+        window.changeSnakeDir = (dir) => {
+            switch(dir) {
+                case 'up': if(dy!==1) { dx=0; dy=-1; } break;
+                case 'down': if(dy!==-1) { dx=0; dy=1; } break;
+                case 'left': if(dx!==1) { dx=-1; dy=0; } break;
+                case 'right': if(dx!==-1) { dx=1; dy=0; } break;
+            }
+        };
+
+        cheats['snake'] = toggleSnakeGame;
+        cheats['mirror'] = () => {
+            document.body.style.transform = document.body.style.transform === 'scaleX(-1)' ? 'none' : 'scaleX(-1)';
+            showToast("🪞 Mirror Mode Toggled", 'minimize');
+        };
+
+        // 31. [美化] 自定义通知系统
+        function showToast(message, icon = 'info-circle') {
+            const container = document.getElementById('toast-container');
+            if(!container) return;
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<i class="fa-solid fa-${icon}"></i> <span>${message}</span>`;
+            
+            container.appendChild(toast);
+            
+            // Trigger reflow
+            void toast.offsetWidth;
+            
+            toast.classList.add('show');
+            
+            // Play sound
+            if(window.playPianoNote) window.playPianoNote();
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // 32. [创意] 终端欢迎语更新
+        if(termOutput) {
+            // ... existing logic ...
+        }
+    </script>
+</body>
+</html>
