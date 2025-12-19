@@ -11,7 +11,6 @@ I’m excited to share the **open‑source front‑end code** that powers my per
 ### 📌 在线体验 / Live Demo
 
 🌐 **我的主页：** [https://me2u.top](https://me2u.top)
-🗂 **源码贴在这里：** 就在这个帖子里！
 
 You can preview the live site above — this is what the open‑sourced code runs!
 
